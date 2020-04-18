@@ -140,7 +140,7 @@ class Player extends FlxSprite implements ITeam {
 			var gib = new FlxParticle();
 			gib.loadGraphic("assets/images/ship.png", true, 4, 4);
 			gib.animation.frameIndex = i % gib.animation.frames;
-			gib.scale.scale(8);
+			gib.scale.scale(16);
 			gibs.add(gib);
 		}
 		gibs.start();

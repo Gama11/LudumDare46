@@ -9,6 +9,8 @@ class PlayState extends FlxState {
 	var cursor:FlxSprite;
 	var ui:UI;
 
+	var gameEnded = false;
+
 	override public function create() {
 		FlxCamera.defaultCameras = [FlxG.camera];
 
@@ -79,6 +81,11 @@ class PlayState extends FlxState {
 			player.kill();
 		}
 		#end
+
+		if (!player.alive && !gameEnded) {
+			ui.endGame();
+			gameEnded = true;
+		}
 	}
 
 	function onBulletHit(bullet:Bullet, object:ITeam) {

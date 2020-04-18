@@ -4,17 +4,21 @@ import flixel.addons.effects.chainable.FlxGlitchEffect;
 class UI extends FlxSpriteGroup {
 	static final ScaleIncreasePercentage = 0.5;
 
+	var heart:FlxSprite;
+	var healthCounter:FlxText;
+
 	var effectSprite:FlxEffectSprite;
 	var instructions:FlxText;
+	var thumps:Array<FlxTween> = [];
 
 	public function new() {
 		super();
 
-		var heart = new FlxSprite(10, 10, AssetPaths.heart__png);
+		heart = new FlxSprite(10, 10, AssetPaths.heart__png);
 		heart.scale.scale(2);
 		add(heart);
 
-		var healthCounter = new FlxText(heart.x + heart.frameWidth + 12, 0, "1", 22);
+		healthCounter = new FlxText(heart.x + heart.frameWidth + 12, 0, "1", 22);
 		healthCounter.color = FlxColor.RED;
 		add(healthCounter);
 
@@ -28,7 +32,7 @@ class UI extends FlxSpriteGroup {
 				type: FlxTweenType.LOOPING,
 				ease: FlxEase.expoIn
 			};
-			FlxTween.tween(object.scale, {x: scale, y: scale}, 1, options);
+			thumps.push(FlxTween.tween(object.scale, {x: scale, y: scale}, 1, options));
 		}
 
 		thump(heart);
@@ -67,5 +71,35 @@ class UI extends FlxSpriteGroup {
 	public function skipIntro() {
 		effectSprite.kill();
 		instructions.kill();
+	}
+
+	public function endGame() {
+		function accelerate(s:FlxSprite) {
+			s.acceleration.y = FlxG.random.int(550, 600);
+			s.acceleration.x = FlxG.random.int(50, 100);
+			s.angularVelocity = FlxG.random.int(20, 40);
+		}
+		function makePiece(n:Int) {
+			var piece = new FlxSprite('assets/images/heart_piece_$n.png');
+			piece.x = heart.x;
+			piece.y = heart.y;
+			piece.scale.scale(2);
+			accelerate(piece);
+			add(piece);
+			return piece;
+		}
+
+		makePiece(1);
+		makePiece(2).x += 10;
+
+		healthCounter.text = "0";
+		healthCounter.moves = true;
+		accelerate(healthCounter);
+
+		heart.visible = false;
+
+		for (thump in thumps) {
+			thump.cancel();
+		}
 	}
 }
