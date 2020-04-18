@@ -87,7 +87,7 @@ class Player extends FlxSprite implements ITeam {
 		x = FlxMath.lerp(x, FlxG.mouse.x - frameWidth / 2, factor);
 		y = FlxMath.lerp(y, FlxG.mouse.y - frameHeight / 2, factor);
 
-		var offset = 6;
+		var offset = 10;
 
 		exhaust1.x = x + offset;
 		exhaust1.y = y + frameHeight - 2;
