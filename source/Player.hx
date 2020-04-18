@@ -1,3 +1,22 @@
+import flixel.effects.particles.FlxEmitter.FlxEmitterMode;
+
+class SmokeParticle extends FlxParticle {
+	public function new() {
+		super();
+	}
+
+	override function onEmit() {
+		super.onEmit();
+		lifespan = 1;
+	}
+
+	override function update(elapsed) {
+		super.update(elapsed);
+		scale.set(scale.x, scale.x);
+		velocity.x = 0;
+	}
+}
+
 class Player extends FlxSprite implements ITeam {
 	static final Sound = 1;
 	static final LerpFactor = 0.05;
@@ -8,6 +27,8 @@ class Player extends FlxSprite implements ITeam {
 	static final Kickback = 6;
 
 	public var team(default, null):Team = Player;
+	public var exhaust1(default, null):FlxTypedEmitter<SmokeParticle>;
+	public var exhaust2(default, null):FlxTypedEmitter<SmokeParticle>;
 
 	final bullets:Bullets;
 	var rolling = false;
@@ -17,6 +38,24 @@ class Player extends FlxSprite implements ITeam {
 		super(AssetPaths.ship__png);
 		this.bullets = bullets;
 		health = 1;
+
+		function makeExhaust() {
+			var exhaust = new FlxTypedEmitter<SmokeParticle>();
+			exhaust.particleClass = SmokeParticle;
+			exhaust.launchMode = FlxEmitterMode.SQUARE;
+			exhaust.velocity.start.set(new FlxPoint(0, 50), new FlxPoint(0, 60));
+			exhaust.velocity.end.set(new FlxPoint(0, 10), new FlxPoint(0, 20));
+			exhaust.alpha.start.set(0.2, 0.3);
+			exhaust.alpha.end.set(0);
+			exhaust.scale.start.set(new FlxPoint(0.4, 0.4), new FlxPoint(1.5, 1.5));
+			exhaust.scale.end.set(new FlxPoint(0.1, 0.1), new FlxPoint(0.2, 0.2));
+			exhaust.color.start.min = exhaust.color.start.max = FlxG.random.color(FlxColor.WHITE, FlxColor.BLACK, 1, true);
+			exhaust.loadParticles("assets/images/smoke.png");
+			exhaust.start(false, 0.1);
+			return exhaust;
+		}
+		exhaust1 = makeExhaust();
+		exhaust2 = makeExhaust();
 	}
 
 	override function update(elapsed:Float) {
@@ -46,6 +85,14 @@ class Player extends FlxSprite implements ITeam {
 		}
 		x = FlxMath.lerp(x, FlxG.mouse.x - frameWidth / 2, factor);
 		y = FlxMath.lerp(y, FlxG.mouse.y - frameHeight / 2, factor);
+
+		var offset = 6;
+
+		exhaust1.x = x + offset;
+		exhaust1.y = y + frameHeight - 2;
+
+		exhaust2.x = x + frameWidth - offset;
+		exhaust2.y = y + frameHeight - 2;
 
 		super.update(elapsed);
 	}

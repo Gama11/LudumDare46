@@ -32,6 +32,8 @@ class PlayState extends FlxState {
 		add(bullets);
 		add(enemies);
 		add(cursor);
+		add(player.exhaust1);
+		add(player.exhaust2);
 		add(player);
 		add(ui);
 
