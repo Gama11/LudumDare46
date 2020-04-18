@@ -2,6 +2,7 @@ class PlayState extends FlxState {
 	var player:Player;
 	var bullets:Bullets;
 	var enemies:Enemies;
+	var cursor:FlxSprite;
 
 	override public function create() {
 		bullets = new Bullets();
@@ -14,9 +15,14 @@ class PlayState extends FlxState {
 		player = new Player(bullets);
 		player.screenCenter();
 
+		cursor = new FlxSprite();
+		cursor.makeGraphic(4, 4, FlxColor.RED);
+		cursor.alpha = 0.5;
+
 		add(bullets);
 		add(enemies);
 		add(player);
+		add(cursor);
 
 		FlxG.mouse.visible = false;
 
@@ -27,7 +33,13 @@ class PlayState extends FlxState {
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
+
 		FlxG.overlap(bullets, enemies, onBulletHit);
+
+		cursor.x = FlxG.mouse.x;
+		cursor.y = FlxG.mouse.y;
+
+		cursor.visible = FlxMath.distanceBetween(cursor, player) > 10;
 	}
 
 	function onBulletHit(bullet:Bullet, object:ITeam) {
