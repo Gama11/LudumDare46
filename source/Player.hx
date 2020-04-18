@@ -133,7 +133,7 @@ class Player extends FlxSprite implements ITeam {
 		exhaust2.kill();
 		fireTimer.cancel();
 
-		FlxG.sound.play('assets/sounds/explode.wav');
+		FlxG.sound.play('assets/sounds/lose.wav');
 		FlxG.camera.shake(0.03, 1);
 
 		var gibs = new FlxEmitter();

@@ -111,21 +111,23 @@ class UI extends FlxSpriteGroup {
 			thump.cancel();
 		}
 
+		var delay = 0.6;
 		FlxTween.tween(scoreText, {x: 0, y: FlxG.height / 2 - 150}, 0.3, {
 			onComplete: _ -> {
 				new FlxTimer().start(1, function(_) {
 					scoreText.text = "Final " + scoreText.text;
 					FlxG.sound.play("assets/sounds/final.wav");
-					new FlxTimer().start(1, function(_) {
-						new FlxTimer().start(1, function(_) {
+					new FlxTimer().start(delay, function(_) {
+						new FlxTimer().start(delay, function(_) {
 							var deaths = FlxG.save.data.deaths;
 							if (deaths == null) {
 								return;
 							}
 							scoreText.text += "\nDeaths: " + deaths;
-							FlxG.sound.play("assets/sounds/final3.wav");
-							new FlxTimer().start(1, function(_) {
+							FlxG.sound.play("assets/sounds/final.wav");
+							new FlxTimer().start(delay, function(_) {
 								scoreText.text += "\n\nPress R to Retry";
+								FlxG.sound.play("assets/sounds/final.wav");
 							});
 						});
 						var highscore = FlxG.save.data.highscore;
@@ -133,7 +135,7 @@ class UI extends FlxSpriteGroup {
 							return;
 						}
 						scoreText.text += "\nHighscore: " + highscore;
-						FlxG.sound.play("assets/sounds/final2.wav");
+						FlxG.sound.play("assets/sounds/final.wav");
 					});
 				});
 			},
