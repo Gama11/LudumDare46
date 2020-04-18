@@ -1,7 +1,9 @@
 class Player extends FlxSprite implements ITeam {
-	static inline final LerpFactor = 0.1;
-	static inline final FireRate = 0.1;
-	static inline final BulletOffset = 5;
+	static final Sound = 1;
+	static final LerpFactor = 0.1;
+	static final FireRate = 0.15;
+	static final BulletOffsetX = 5;
+	static final BulletOffsetY = 10;
 
 	public var team(default, null):Team = Player;
 
@@ -21,7 +23,8 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	function shoot(_) {
-		bullets.spawn(x + BulletOffset, y, Player);
-		bullets.spawn(x + frameWidth - BulletOffset, y, Player);
+		bullets.spawn(x + BulletOffsetX, y + BulletOffsetY, Player);
+		bullets.spawn(x + frameWidth - BulletOffsetX, y + BulletOffsetY, Player);
+		FlxG.sound.play('assets/sounds/pew$Sound.wav', 0.5);
 	}
 }

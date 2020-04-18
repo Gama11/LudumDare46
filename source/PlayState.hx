@@ -29,7 +29,7 @@ class PlayState extends FlxState {
 		FlxG.mouse.visible = false;
 
 		FlxG.debugger.visible = true;
-		FlxG.debugger.drawDebug = true;
+		// FlxG.debugger.drawDebug = true;
 		FlxG.console.registerClass(Player);
 	}
 
