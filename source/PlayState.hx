@@ -15,7 +15,7 @@ class PlayState extends FlxState {
 		bgColor = 0x222222;
 		FlxG.camera.zoom = 0.1;
 
-		var starField = new FlxStarField2D();
+		var starField = new FlxStarField2D(Std.int(-FlxG.width / 2), Std.int(-FlxG.height / 2), FlxG.width * 2, FlxG.height * 2);
 		starField.starVelocityOffset.set(0, 1);
 
 		bullets = new Bullets();
@@ -71,7 +71,7 @@ class PlayState extends FlxState {
 		if (FlxG.keys.justPressed.R) {
 			FlxG.resetState();
 		}
-		if (FlxG.keys.justPressed.SPACE) {
+		if (FlxG.keys.justPressed.S) {
 			skipIntro();
 		}
 		#if debug

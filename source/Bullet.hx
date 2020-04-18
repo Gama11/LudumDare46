@@ -45,8 +45,8 @@ class Bullet extends FlxSprite implements ITeam {
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		if (!isOnScreen()) {
-			kill();
+		if (y > 1000 || y < -200) {
+			exists = false;
 		}
 	}
 }

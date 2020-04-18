@@ -3,17 +3,21 @@ enum EnemyType {
 }
 
 class Enemy extends FlxSprite implements ITeam {
+	static final FireRate = 0.2;
+
 	public var team(default, null):Team = Enemy;
 
 	final fireTimer = new FlxTimer();
 	final bullets:Bullets;
 	var type:EnemyType;
+	var waitUntilNextVolley:Int = 0;
+	var shot:Int = 0;
+	var maxHealth:Int;
 
 	public function new(bullets) {
 		super();
 		this.bullets = bullets;
-		makeGraphic(60, 60, FlxColor.RED);
-		health = 10;
+		makeGraphic(30, 30, FlxColor.GREEN);
 	}
 
 	public function init(x, y, type) {
@@ -22,7 +26,8 @@ class Enemy extends FlxSprite implements ITeam {
 		velocity.y = 150;
 		health = 5;
 		fireTimer.cancel();
-		fireTimer.start(1, _ -> shoot(), 0);
+		fireTimer.start(FireRate, _ -> shoot(), 0);
+		health = maxHealth = 10;
 
 		switch type {
 			case Basic(xDir):
@@ -34,11 +39,16 @@ class Enemy extends FlxSprite implements ITeam {
 		super.update(elapsed);
 
 		if (y > 1000) {
-			kill();
+			exists = false;
 		}
 	}
 
 	function shoot() {
+		if (waitUntilNextVolley > 0) {
+			waitUntilNextVolley--;
+			return;
+		}
+
 		var angleOffset = 180;
 		var deltaAngle = 20;
 		var y = y + frameHeight - 2;
@@ -48,10 +58,22 @@ class Enemy extends FlxSprite implements ITeam {
 		fire(angleOffset - deltaAngle);
 		fire(angleOffset);
 		fire(angleOffset + deltaAngle);
+
+		shot++;
+		if (shot > 5) {
+			waitUntilNextVolley = 6;
+			shot = 0;
+		}
 	}
 
 	override function kill() {
 		super.kill();
 		fireTimer.cancel();
+		FlxG.sound.play("assets/sounds/explode_enemy.wav");
+	}
+
+	override function hurt(damage:Float) {
+		super.hurt(damage);
+		alpha = Math.max(health / maxHealth, 0.2);
 	}
 }

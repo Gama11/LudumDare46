@@ -15,7 +15,7 @@ class Enemies extends FlxTypedGroup<Enemy> {
 		new FlxTimer().start(3, function(timer) {
 			var xOffset = if (dir == -1) 300 else -100;
 			for (i in 0...5) {
-				spawn(10 + i * 100 + xOffset, -100, Basic(dir));
+				spawn(10 + i * 100 + xOffset, -100 - i * 10, Basic(dir));
 			}
 			dir *= -1;
 		}, 0);

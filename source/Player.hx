@@ -19,8 +19,8 @@ class SmokeParticle extends FlxParticle {
 
 class Player extends FlxSprite implements ITeam {
 	static final Sound = 1;
-	static final LerpFactor = 0.05;
-	static final FireRate = 0.15;
+	static final LerpFactor = 0.02;
+	static final FireRate = 0.2;
 	static final BulletOffsetX = 5;
 	static final BulletOffsetY = 10;
 	static final RollDuration = 0.5;
@@ -33,7 +33,6 @@ class Player extends FlxSprite implements ITeam {
 	final bullets:Bullets;
 	var rolling = false;
 	var firing = false;
-	var currentSpeed = 0.007;
 	final fireTimer = new FlxTimer();
 
 	public function new(bullets) {
@@ -63,30 +62,31 @@ class Player extends FlxSprite implements ITeam {
 	override function update(elapsed:Float) {
 		if (FlxG.mouse.justPressedRight && !rolling) {
 			rolling = true;
-			alpha = 0.5;
 			solid = false;
+			setColorTransform(1, 1, 1, 122, 122, 122);
 			FlxG.sound.play("assets/sounds/jump.wav");
 			FlxTween.tween(this, {
 				"scale.x": -1,
-				"scale.y": 1.2
+				"scale.y": 1.2,
+				x: FlxG.mouse.x - frameWidth / 2,
+				y: FlxG.mouse.y - frameHeight / 2
 			}, RollDuration, {
 				type: PINGPONG,
 				onComplete: function(tween) {
 					tween.cancel();
 					scale.set(1, 1);
 					rolling = false;
-					alpha = 1;
 					solid = true;
+					setColorTransform();
 				}
 			});
 		}
 
-		var factor = currentSpeed;
-		if (rolling) {
-			factor *= 4;
+		if (!FlxG.keys.pressed.SPACE && !rolling) {
+			var factor = LerpFactor;
+			x = FlxMath.lerp(x, FlxG.mouse.x - frameWidth / 2, factor);
+			y = FlxMath.lerp(y, FlxG.mouse.y - frameHeight / 2, factor);
 		}
-		x = FlxMath.lerp(x, FlxG.mouse.x - frameWidth / 2, factor);
-		y = FlxMath.lerp(y, FlxG.mouse.y - frameHeight / 2, factor);
 
 		var offset = 10;
 
@@ -100,7 +100,7 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	function shoot(_) {
-		var fire = bullets.spawn.bind(_, _, Player, FlxColor.YELLOW, 0, Wiggle, 500);
+		var fire = bullets.spawn.bind(_, _, Player, FlxColor.YELLOW, 0, Wiggle, 700);
 		fire(x + BulletOffsetX, y + BulletOffsetY);
 		fire(x + frameWidth - BulletOffsetX, y + BulletOffsetY);
 
@@ -113,7 +113,6 @@ class Player extends FlxSprite implements ITeam {
 			return;
 		}
 		fireTimer.start(FireRate, shoot, 0);
-		currentSpeed = LerpFactor;
 		firing = true;
 	}
 

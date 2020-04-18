@@ -2,7 +2,7 @@ import flixel.addons.effects.chainable.FlxEffectSprite;
 import flixel.addons.effects.chainable.FlxGlitchEffect;
 
 class UI extends FlxSpriteGroup {
-	static final ScaleIncreasePercentage = 0.4;
+	static final ScaleIncreasePercentage = 0.5;
 
 	var effectSprite:FlxEffectSprite;
 	var instructions:FlxText;
@@ -40,9 +40,11 @@ class UI extends FlxSpriteGroup {
 		effectSprite.setPosition(40, FlxG.height - 120);
 		add(effectSprite);
 
-		instructions = new FlxText(-1000, FlxG.height / 2, "Mouse to move. Right Click to Dodge Roll. Don't die.", 24);
+		var instructionMessage = "Mouse to move.\nWell, barely - your engines are damaged.\nRight Click to Dodge Roll.\nHold Space to Lock Position.\nDon't die.";
+		instructions = new FlxText(-1000, FlxG.height / 2 - 50, instructionMessage, 24);
 		instructions.borderStyle = OUTLINE;
 		instructions.borderColor = FlxColor.WHITE;
+		instructions.alignment = CENTER;
 		instructions.color = FlxColor.BLACK;
 		add(instructions);
 	}
@@ -52,7 +54,7 @@ class UI extends FlxSpriteGroup {
 			onComplete: function(_) {
 				FlxTween.tween(instructions, {x: 25}, 0.1, {
 					onComplete: function(_) {
-						new FlxTimer().start(3, function(_) {
+						new FlxTimer().start(6, function(_) {
 							FlxTween.tween(instructions, {x: 1000}, 0.1);
 							callback();
 						});
