@@ -24,7 +24,7 @@ class Player extends FlxSprite implements ITeam {
 	static final BulletOffsetX = 5;
 	static final BulletOffsetY = 10;
 	static final RollDuration = 0.5;
-	static final Kickback = 6;
+	static final Kickback = 3;
 
 	public var team(default, null):Team = Player;
 	public var exhaust1(default, null):FlxTypedEmitter<SmokeParticle>;
