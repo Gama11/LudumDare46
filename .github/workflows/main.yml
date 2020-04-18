@@ -12,7 +12,7 @@ jobs:
     - uses: lix-pm/setup-lix@master
     - uses: HaxeFlixel/setup-flixel@master
       with:
-        haxe-version: nightly
+        haxe-version: stable
         flixel-versions: dev
         target: html5
     - name: Build
