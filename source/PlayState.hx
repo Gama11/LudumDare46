@@ -1,4 +1,6 @@
 class PlayState extends FlxState {
+	public static final IntroDuration = 3;
+
 	var player:Player;
 	var bullets:Bullets;
 	var enemies:Enemies;
@@ -6,6 +8,11 @@ class PlayState extends FlxState {
 	var ui:UI;
 
 	override public function create() {
+		FlxCamera.defaultCameras = [FlxG.camera];
+
+		bgColor = 0x222222;
+		FlxG.camera.zoom = 0.1;
+
 		bullets = new Bullets();
 		enemies = new Enemies();
 
@@ -14,23 +21,33 @@ class PlayState extends FlxState {
 		}
 
 		player = new Player(bullets);
+		player.active = false;
 		player.screenCenter();
 
-		cursor = new FlxSprite();
-		cursor.makeGraphic(4, 4, FlxColor.RED);
-		cursor.alpha = 0.5;
+		cursor = new FlxSprite("assets/images/target.png");
+
+		var uiCamera = FlxG.cameras.add(new FlxCamera());
+		ui = new UI();
+		ui.cameras = [uiCamera];
 
 		add(bullets);
 		add(enemies);
 		add(player);
 		add(cursor);
-		add(ui = new UI());
+		add(ui);
 
 		FlxG.mouse.visible = false;
 
-		FlxG.debugger.visible = true;
+		// FlxG.debugger.visible = true;
 		// FlxG.debugger.drawDebug = true;
 		FlxG.console.registerClass(Player);
+
+		FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.expoIn});
+		new FlxTimer().start(IntroDuration, function(_) {
+			ui.endIntro();
+			player.active = true;
+		});
+		new FlxTimer().start(1, _ -> FlxG.sound.play("assets/sounds/intro.wav"));
 	}
 
 	override public function update(elapsed:Float) {
@@ -38,8 +55,8 @@ class PlayState extends FlxState {
 
 		FlxG.overlap(bullets, enemies, onBulletHit);
 
-		cursor.x = FlxG.mouse.x;
-		cursor.y = FlxG.mouse.y;
+		cursor.x = FlxG.mouse.x - cursor.frameWidth / 2;
+		cursor.y = FlxG.mouse.y - cursor.frameHeight / 2;
 
 		cursor.visible = FlxMath.distanceBetween(cursor, player) > 10;
 	}

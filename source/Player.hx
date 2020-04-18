@@ -23,6 +23,9 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	function shoot(_) {
+		if (!active) {
+			return;
+		}
 		bullets.spawn(x + BulletOffsetX, y + BulletOffsetY, Player);
 		bullets.spawn(x + frameWidth - BulletOffsetX, y + BulletOffsetY, Player);
 		FlxG.sound.play('assets/sounds/pew$Sound.wav', 0.1);

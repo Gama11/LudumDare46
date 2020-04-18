@@ -1,5 +1,10 @@
+import flixel.addons.effects.chainable.FlxEffectSprite;
+import flixel.addons.effects.chainable.FlxGlitchEffect;
+
 class UI extends FlxSpriteGroup {
 	static final ScaleIncreasePercentage = 0.4;
+
+	var effectSprite:FlxEffectSprite;
 
 	public function new() {
 		super();
@@ -27,5 +32,15 @@ class UI extends FlxSpriteGroup {
 
 		thump(heart);
 		thump(healthCounter);
+
+		var message = new FlxText(0, 0, "You're on your last life, pilot\n - better make the most of it!", 36);
+		message.color = FlxColor.GRAY;
+		effectSprite = new FlxEffectSprite(message, [new FlxGlitchEffect(4, 4)]);
+		effectSprite.setPosition(40, FlxG.height - 120);
+		add(effectSprite);
+	}
+
+	public function endIntro() {
+		FlxTween.tween(effectSprite, {alpha: 0}, 3);
 	}
 }

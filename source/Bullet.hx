@@ -20,6 +20,6 @@ class Bullet extends FlxSprite implements ITeam {
 		if (scaleTween != null) {
 			scaleTween.cancel();
 		}
-		scaleTween = FlxTween.tween(scale, {x: 1, y: 1}, 0.1, {ease: FlxEase.cubeIn});
+		scaleTween = FlxTween.tween(scale, {x: 1, y: 1}, 0.3, {ease: FlxEase.cubeIn});
 	}
 }
