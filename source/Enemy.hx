@@ -24,11 +24,13 @@ class Enemy extends FlxSprite implements ITeam {
 		reset(x, y);
 		this.type = type;
 		velocity.y = 150;
-		health = 5;
+		health = 4;
 		fireTimer.cancel();
 		fireTimer.start(FireRate, _ -> shoot(), 0);
 		health = maxHealth = 10;
 		scale.set(2, 2);
+		waitUntilNextVolley = FlxG.random.int(0, 5);
+		shot = 0;
 
 		switch type {
 			case Basic(xDir):
@@ -73,7 +75,7 @@ class Enemy extends FlxSprite implements ITeam {
 		super.kill();
 		fireTimer.cancel();
 		FlxG.sound.play("assets/sounds/explode_enemy.wav");
-		FlxG.camera.shake(0.001, 0.1);
+		FlxG.camera.shake(0.005, 0.2);
 	}
 
 	override function hurt(damage:Float) {

@@ -32,7 +32,7 @@ class UI extends FlxSpriteGroup {
 					FlxG.sound.play("assets/sounds/thump.wav", 0.3);
 				}
 			};
-			thumps.push(FlxTween.tween(object.scale, {x: scale, y: scale}, 1, options));
+			thumps.push(FlxTween.tween(object.scale, {x: scale, y: scale}, 2, options));
 		}
 
 		thump(heart);
@@ -52,7 +52,7 @@ class UI extends FlxSpriteGroup {
 		instructions.color = FlxColor.BLACK;
 		add(instructions);
 
-		scoreText = new FlxText(320, 0, 0, "Score: 0", 16);
+		scoreText = new FlxText(330, 10, 0, "Score: 0", 16);
 		scoreText.fieldWidth = FlxG.width;
 		scoreText.alignment = CENTER;
 		add(scoreText);
@@ -65,7 +65,7 @@ class UI extends FlxSpriteGroup {
 	public function endIntro(callback:() -> Void) {
 		FlxTween.tween(effectSprite, {alpha: 0}, 1, {
 			onComplete: function(_) {
-				FlxTween.tween(instructions, {x: 90}, 0.1, {
+				FlxTween.tween(instructions, {x: 100}, 0.1, {
 					onComplete: function(_) {
 						new FlxTimer().start(6, function(_) {
 							FlxTween.tween(instructions, {x: 1000}, 0.1);
@@ -124,6 +124,9 @@ class UI extends FlxSpriteGroup {
 							}
 							scoreText.text += "\nDeaths: " + deaths;
 							FlxG.sound.play("assets/sounds/final3.wav");
+							new FlxTimer().start(1, function(_) {
+								scoreText.text += "\n\nPress R to Retry";
+							});
 						});
 						var highscore = FlxG.save.data.highscore;
 						if (highscore == null) {

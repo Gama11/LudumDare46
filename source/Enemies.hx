@@ -70,6 +70,7 @@ class Enemies extends FlxTypedGroup<Enemy> {
 				case Enemies: 3;
 				case BulletWall: 0.3;
 			}, _ -> spawnWave(), 0);
+			PlayState.FirstWaveBeaten = true;
 		});
 		waveDuration = FlxG.random.int(5, 10);
 	}

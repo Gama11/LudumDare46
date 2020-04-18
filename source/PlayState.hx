@@ -1,6 +1,7 @@
 import flixel.addons.display.FlxStarField.FlxStarField2D;
 
 class PlayState extends FlxState {
+	public static var FirstWaveBeaten = false;
 	public static final IntroDuration = 3;
 
 	var player:Player;
@@ -12,6 +13,7 @@ class PlayState extends FlxState {
 
 	var score:Int = 0;
 	var pickupChance:Float = 0;
+	var gameStarted = false;
 	var gameEnded = false;
 
 	override public function create() {
@@ -55,15 +57,15 @@ class PlayState extends FlxState {
 		FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.expoIn});
 		new FlxTimer().start(IntroDuration, function(_) {
 			ui.endIntro(() -> {
-				player.startFiring();
-				enemies.startSpawning();
+				startGame();
 			});
 		});
 		new FlxTimer().start(1, _ -> FlxG.sound.play("assets/sounds/intro.wav"));
 
-		#if debug
-		skipIntro();
-		#end
+		var skip = FirstWaveBeaten || #if debug true #else false #end;
+		if (skip) {
+			skipIntro();
+		}
 	}
 
 	override public function update(elapsed:Float) {
@@ -89,24 +91,26 @@ class PlayState extends FlxState {
 		}
 		#end
 
-		if (!player.alive && !gameEnded) {
-			ui.endGame();
-			gameEnded = true;
-			if (FlxG.save.data.highscore == null || FlxG.save.data.highscore < score) {
-				FlxG.save.data.highscore = score;
+		if (gameStarted) {
+			if (!player.alive && !gameEnded) {
+				ui.endGame();
+				gameEnded = true;
+				if (FlxG.save.data.highscore == null || FlxG.save.data.highscore < score) {
+					FlxG.save.data.highscore = score;
+				}
+				var deaths:Null<Int> = FlxG.save.data.deaths;
+				if (deaths == null) {
+					deaths = 0;
+				}
+				FlxG.save.data.deaths = deaths + 1;
 			}
-			var deaths:Null<Int> = FlxG.save.data.deaths;
-			if (deaths == null) {
-				deaths = 0;
-			}
-			FlxG.save.data.deaths = deaths + 1;
-		}
 
-		if (FlxG.random.bool(pickupChance)) {
-			pickupChance = 0;
-			pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10);
-		} else {
-			pickupChance += 0.01;
+			if (FlxG.random.bool(pickupChance)) {
+				pickupChance = 0;
+				pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10);
+			} else {
+				pickupChance += 0.01;
+			}
 		}
 	}
 
@@ -130,6 +134,11 @@ class PlayState extends FlxState {
 
 	function skipIntro() {
 		ui.skipIntro();
+		startGame();
+	}
+
+	function startGame() {
+		gameStarted = true;
 		player.startFiring();
 		enemies.startSpawning();
 	}

@@ -123,6 +123,10 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	override function kill() {
+		#if inv
+		return;
+		#end
+
 		super.kill();
 
 		exhaust1.kill();
