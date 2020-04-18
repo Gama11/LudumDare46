@@ -1,5 +1,9 @@
+enum BulletType {
+	Normal;
+	Wiggle;
+}
+
 class Bullet extends FlxSprite implements ITeam {
-	static inline final Velocity = 500;
 	static inline final WiggleStrength = 20;
 
 	public var team(default, null):Team = Enemy;
@@ -7,29 +11,36 @@ class Bullet extends FlxSprite implements ITeam {
 
 	var scaleTween:FlxTween;
 	var wiggleTween:FlxTween;
+	var type:BulletType;
 
 	public function new() {
 		super();
-		makeGraphic(3, 8);
+		makeGraphic(8, 4);
 	}
 
-	public function init(x, y, team, color) {
+	public function init(x, y, team, color, angle, type, speed) {
 		reset(x, y);
+
+		angle -= 90;
 		this.team = team;
 		this.color = color;
-		velocity.y = -Velocity;
+		this.angle = angle;
+
+		velocity.copyFrom(FlxVelocity.velocityFromAngle(angle, speed));
+
 		scale.set(0.1, 0.1);
 		if (scaleTween != null) {
 			scaleTween.cancel();
 		}
+		scaleTween = FlxTween.tween(scale, {x: 1, y: 1}, 0.1, {ease: FlxEase.cubeIn});
+
 		if (wiggleTween != null) {
 			wiggleTween.cancel();
 		}
-
-		scaleTween = FlxTween.tween(scale, {x: 1, y: 1}, 0.1, {ease: FlxEase.cubeIn});
-
-		velocity.x = -WiggleStrength;
-		wiggleTween = FlxTween.tween(velocity, {x: WiggleStrength}, 0.1, {type: PINGPONG});
+		if (type == Wiggle) {
+			velocity.x = -WiggleStrength;
+			wiggleTween = FlxTween.tween(velocity, {x: WiggleStrength}, 0.1, {type: PINGPONG});
+		}
 	}
 
 	override function update(elapsed:Float) {

@@ -1,4 +1,4 @@
-import flixel.effects.particles.FlxEmitter.FlxEmitterMode;
+import flixel.effects.particles.FlxEmitter;
 
 class SmokeParticle extends FlxParticle {
 	public function new() {
@@ -34,6 +34,7 @@ class Player extends FlxSprite implements ITeam {
 	var rolling = false;
 	var firing = false;
 	var currentSpeed = 0.007;
+	final fireTimer = new FlxTimer();
 
 	public function new(bullets) {
 		super(AssetPaths.ship__png);
@@ -99,9 +100,10 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	function shoot(_) {
-		var fire = bullets.spawn.bind(_, _, Player, FlxColor.YELLOW);
+		var fire = bullets.spawn.bind(_, _, Player, FlxColor.YELLOW, 0, Wiggle, 500);
 		fire(x + BulletOffsetX, y + BulletOffsetY);
 		fire(x + frameWidth - BulletOffsetX, y + BulletOffsetY);
+
 		FlxG.sound.play('assets/sounds/pew$Sound.wav', 0.1);
 		y += Kickback;
 	}
@@ -110,8 +112,46 @@ class Player extends FlxSprite implements ITeam {
 		if (firing) {
 			return;
 		}
-		new FlxTimer().start(FireRate, shoot, 0);
+		fireTimer.start(FireRate, shoot, 0);
 		currentSpeed = LerpFactor;
 		firing = true;
+	}
+
+	override function kill() {
+		super.kill();
+
+		exhaust1.kill();
+		exhaust2.kill();
+		fireTimer.cancel();
+
+		FlxG.sound.play('assets/sounds/explode.wav');
+		FlxG.camera.shake(0.05, 1);
+
+		var gibs = new FlxEmitter();
+		gibs.alpha.start.set(1);
+		gibs.alpha.end.set(0);
+		gibs.scale.start.set(new FlxPoint(0.4, 0.4), new FlxPoint(1.5, 1.5));
+		gibs.scale.end.set(new FlxPoint(0.1, 0.1), new FlxPoint(0.2, 0.2));
+		gibs.velocity.set(0, 0, 20, 20, 0, 0, 20, 20);
+		gibs.lifespan.set(20);
+		gibs.angle.set(0, 360, 0, 360);
+		gibs.x = x;
+		gibs.y = y;
+		for (i in 0...100) {
+			var gib = new FlxParticle();
+			gib.loadGraphic("assets/images/ship.png", true, 4, 4);
+			gib.animation.frameIndex = i % gib.animation.frames;
+			gib.scale.scale(8);
+			gibs.add(gib);
+		}
+		gibs.start();
+		FlxG.state.add(gibs);
+
+		FlxG.camera.follow(this);
+		FlxG.camera.followLerp = 0.5;
+		FlxTween.tween(FlxG.camera, {zoom: 2}, 3);
+		var almostBlack = FlxColor.BLACK;
+		almostBlack.alphaFloat = 0.9;
+		FlxG.camera.fade(almostBlack, 10);
 	}
 }

@@ -19,11 +19,7 @@ class PlayState extends FlxState {
 		starField.starVelocityOffset.set(0, 1);
 
 		bullets = new Bullets();
-		enemies = new Enemies();
-
-		for (i in 0...10) {
-			enemies.spawn(FlxG.width / i, 10);
-		}
+		enemies = new Enemies(bullets);
 
 		player = new Player(bullets);
 		player.screenCenter();
@@ -53,15 +49,21 @@ class PlayState extends FlxState {
 		new FlxTimer().start(IntroDuration, function(_) {
 			ui.endIntro(() -> {
 				player.startFiring();
+				enemies.startSpawning();
 			});
 		});
 		new FlxTimer().start(1, _ -> FlxG.sound.play("assets/sounds/intro.wav"));
+
+		#if debug
+		skipIntro();
+		#end
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
 		FlxG.overlap(bullets, enemies, onBulletHit);
+		FlxG.overlap(bullets, player, onBulletHit);
 
 		cursor.x = FlxG.mouse.x - cursor.frameWidth / 2;
 		cursor.y = FlxG.mouse.y - cursor.frameHeight / 2 + 10;
@@ -70,9 +72,13 @@ class PlayState extends FlxState {
 			FlxG.resetState();
 		}
 		if (FlxG.keys.justPressed.SPACE) {
-			player.startFiring();
-			ui.skipIntro();
+			skipIntro();
 		}
+		#if debug
+		if (FlxG.keys.justPressed.D) {
+			player.kill();
+		}
+		#end
 	}
 
 	function onBulletHit(bullet:Bullet, object:ITeam) {
@@ -80,5 +86,11 @@ class PlayState extends FlxState {
 			var object:FlxSprite = cast object;
 			object.hurt(bullet.damage);
 		}
+	}
+
+	function skipIntro() {
+		ui.skipIntro();
+		player.startFiring();
+		enemies.startSpawning();
 	}
 }
