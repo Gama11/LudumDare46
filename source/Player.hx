@@ -24,15 +24,17 @@ class Player extends FlxSprite implements ITeam {
 	static final BulletOffsetX = 5;
 	static final BulletOffsetY = 10;
 	static final RollDuration = 0.5;
-	static final Kickback = 3;
+	static final RollCooldown = 1;
+	static final Kickback = 6;
 
 	public var team(default, null):Team = Player;
 	public var exhaust1(default, null):FlxTypedEmitter<SmokeParticle>;
 	public var exhaust2(default, null):FlxTypedEmitter<SmokeParticle>;
+	public var canRoll(default, null) = true;
 
 	final bullets:Bullets;
-	var rolling = false;
 	var firing = false;
+	var rolling = false;
 	final fireTimer = new FlxTimer();
 
 	public function new(bullets) {
@@ -60,8 +62,9 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	override function update(elapsed:Float) {
-		if (FlxG.mouse.justPressedRight && !rolling) {
+		if (FlxG.mouse.justPressedRight && !rolling && canRoll) {
 			rolling = true;
+			canRoll = false;
 			solid = false;
 			setColorTransform(1, 1, 1, 122, 122, 122);
 			FlxG.sound.play("assets/sounds/jump.wav");
@@ -78,6 +81,9 @@ class Player extends FlxSprite implements ITeam {
 					rolling = false;
 					solid = true;
 					setColorTransform();
+					new FlxTimer().start(RollCooldown, _ -> {
+						canRoll = true;
+					});
 				}
 			});
 		}
@@ -124,7 +130,7 @@ class Player extends FlxSprite implements ITeam {
 		fireTimer.cancel();
 
 		FlxG.sound.play('assets/sounds/explode.wav');
-		FlxG.camera.shake(0.05, 1);
+		FlxG.camera.shake(0.03, 1);
 
 		var gibs = new FlxEmitter();
 		gibs.alpha.start.set(1);

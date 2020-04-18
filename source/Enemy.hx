@@ -73,6 +73,7 @@ class Enemy extends FlxSprite implements ITeam {
 		super.kill();
 		fireTimer.cancel();
 		FlxG.sound.play("assets/sounds/explode_enemy.wav");
+		FlxG.camera.shake(0.001, 0.1);
 	}
 
 	override function hurt(damage:Float) {

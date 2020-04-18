@@ -3,9 +3,9 @@ class Enemies extends FlxTypedGroup<Enemy> {
 
 	final bullets:Bullets;
 	var dir = -1;
-	var waveType = BulletWall;
 	var wavesSpawned = 0;
 	var spawnTimer = new FlxTimer();
+	var waveType:WaveType;
 
 	var holeOffset = 0;
 	var holeWidth = 0;
@@ -16,8 +16,6 @@ class Enemies extends FlxTypedGroup<Enemy> {
 	public function new(bullets:Bullets) {
 		super();
 		this.bullets = bullets;
-		setWaveType(waveType);
-		spawnTimer.active = false;
 	}
 
 	public function spawn(x, y, type) {
@@ -25,7 +23,7 @@ class Enemies extends FlxTypedGroup<Enemy> {
 	}
 
 	public function startSpawning() {
-		spawnTimer.active = true;
+		setWaveType(BulletWall);
 	}
 
 	function spawnWave() {

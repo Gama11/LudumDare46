@@ -25,9 +25,12 @@ class UI extends FlxSpriteGroup {
 
 		function thump(object:FlxSprite) {
 			var scale = object.scale.x + object.scale.x * ScaleIncreasePercentage;
-			var options = {
+			var options:TweenOptions = {
 				type: FlxTweenType.LOOPING,
-				ease: FlxEase.expoIn
+				ease: FlxEase.expoIn,
+				onComplete: function(_) {
+					FlxG.sound.play("assets/sounds/thump.wav", 0.3);
+				}
 			};
 			thumps.push(FlxTween.tween(object.scale, {x: scale, y: scale}, 1, options));
 		}
@@ -41,7 +44,7 @@ class UI extends FlxSpriteGroup {
 		effectSprite.setPosition(40, FlxG.height - 120);
 		add(effectSprite);
 
-		var instructionMessage = "Mouse to move.\nWell, barely - your engines are damaged.\nRight Click to Dodge Roll.\nHold Space to Lock Position.\nDon't die.";
+		var instructionMessage = "Mouse to move.\nWell, barely - your engine is damaged.\nRight Click to Dodge Roll.\nHold Space to Lock Position.\nDon't die.";
 		instructions = new FlxText(-1000, FlxG.height / 2 - 50, instructionMessage, 24);
 		instructions.borderStyle = OUTLINE;
 		instructions.borderColor = FlxColor.WHITE;
@@ -62,7 +65,7 @@ class UI extends FlxSpriteGroup {
 	public function endIntro(callback:() -> Void) {
 		FlxTween.tween(effectSprite, {alpha: 0}, 1, {
 			onComplete: function(_) {
-				FlxTween.tween(instructions, {x: 25}, 0.1, {
+				FlxTween.tween(instructions, {x: 90}, 0.1, {
 					onComplete: function(_) {
 						new FlxTimer().start(6, function(_) {
 							FlxTween.tween(instructions, {x: 1000}, 0.1);

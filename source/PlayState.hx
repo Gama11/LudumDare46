@@ -75,6 +75,7 @@ class PlayState extends FlxState {
 
 		cursor.x = FlxG.mouse.x - cursor.frameWidth / 2;
 		cursor.y = FlxG.mouse.y - cursor.frameHeight / 2 + 10;
+		cursor.alpha = player.canRoll ? 1 : 0.2;
 
 		if (FlxG.keys.justPressed.R) {
 			FlxG.resetState();
