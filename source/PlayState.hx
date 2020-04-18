@@ -6,10 +6,12 @@ class PlayState extends FlxState {
 	var player:Player;
 	var bullets:Bullets;
 	var enemies:Enemies;
+	var pickups:Pickups;
 	var cursor:FlxSprite;
 	var ui:UI;
 
 	var score:Int = 0;
+	var pickupChance:Float = 0;
 	var gameEnded = false;
 
 	override public function create() {
@@ -22,6 +24,7 @@ class PlayState extends FlxState {
 		starField.starVelocityOffset.set(0, 1);
 
 		bullets = new Bullets();
+		pickups = new Pickups();
 		enemies = new Enemies(bullets);
 
 		player = new Player(bullets);
@@ -34,6 +37,7 @@ class PlayState extends FlxState {
 		ui.cameras = [uiCamera];
 
 		add(starField);
+		add(pickups);
 		add(bullets);
 		add(enemies);
 		add(cursor);
@@ -67,6 +71,7 @@ class PlayState extends FlxState {
 
 		FlxG.overlap(bullets, enemies, onBulletHit);
 		FlxG.overlap(bullets, player, onBulletHit);
+		FlxG.overlap(pickups, player, onCollectPickup);
 
 		cursor.x = FlxG.mouse.x - cursor.frameWidth / 2;
 		cursor.y = FlxG.mouse.y - cursor.frameHeight / 2 + 10;
@@ -95,6 +100,13 @@ class PlayState extends FlxState {
 			}
 			FlxG.save.data.deaths = deaths + 1;
 		}
+
+		if (FlxG.random.bool(pickupChance)) {
+			pickupChance = 0;
+			pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10);
+		} else {
+			pickupChance += 0.01;
+		}
 	}
 
 	function onBulletHit(bullet:Bullet, object:ITeam) {
@@ -104,15 +116,25 @@ class PlayState extends FlxState {
 
 			if (bullet.team == Player && !object.alive && !gameEnded) {
 				var enemy:Enemy = cast object;
-				score += enemy.score;
-				ui.updateScore(score);
+				increaseScore(enemy.score);
 			}
 		}
+	}
+
+	function onCollectPickup(pickup:Pickup, player:Player) {
+		increaseScore(pickup.score);
+		pickup.kill();
+		FlxG.sound.play("assets/sounds/coin.wav");
 	}
 
 	function skipIntro() {
 		ui.skipIntro();
 		player.startFiring();
 		enemies.startSpawning();
+	}
+
+	function increaseScore(amount:Int) {
+		score += amount;
+		ui.updateScore(score);
 	}
 }

@@ -1,0 +1,1 @@
+typedef Pickups = FlxTypedGroup<Pickup>;

@@ -44,8 +44,8 @@ class Player extends FlxSprite implements ITeam {
 			var exhaust = new FlxTypedEmitter<SmokeParticle>();
 			exhaust.particleClass = SmokeParticle;
 			exhaust.launchMode = FlxEmitterMode.SQUARE;
-			exhaust.velocity.start.set(new FlxPoint(0, 50), new FlxPoint(0, 60));
-			exhaust.velocity.end.set(new FlxPoint(0, 10), new FlxPoint(0, 20));
+			exhaust.velocity.start.set(new FlxPoint(0, 150), new FlxPoint(0, 160));
+			exhaust.velocity.end.set(new FlxPoint(0, 110), new FlxPoint(0, 120));
 			exhaust.alpha.start.set(0.2, 0.3);
 			exhaust.alpha.end.set(0);
 			exhaust.scale.start.set(new FlxPoint(0.4, 0.4), new FlxPoint(1.5, 1.5));
