@@ -9,6 +9,7 @@ class PlayState extends FlxState {
 	var cursor:FlxSprite;
 	var ui:UI;
 
+	var score:Int = 0;
 	var gameEnded = false;
 
 	override public function create() {
@@ -85,6 +86,14 @@ class PlayState extends FlxState {
 		if (!player.alive && !gameEnded) {
 			ui.endGame();
 			gameEnded = true;
+			if (FlxG.save.data.highscore == null || FlxG.save.data.highscore < score) {
+				FlxG.save.data.highscore = score;
+			}
+			var deaths:Null<Int> = FlxG.save.data.deaths;
+			if (deaths == null) {
+				deaths = 0;
+			}
+			FlxG.save.data.deaths = deaths + 1;
 		}
 	}
 
@@ -92,6 +101,12 @@ class PlayState extends FlxState {
 		if (bullet.team != object.team) {
 			var object:FlxSprite = cast object;
 			object.hurt(bullet.damage);
+
+			if (bullet.team == Player && !object.alive && !gameEnded) {
+				var enemy:Enemy = cast object;
+				score += enemy.score;
+				ui.updateScore(score);
+			}
 		}
 	}
 

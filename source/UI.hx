@@ -6,6 +6,7 @@ class UI extends FlxSpriteGroup {
 
 	var heart:FlxSprite;
 	var healthCounter:FlxText;
+	var scoreText:FlxText;
 
 	var effectSprite:FlxEffectSprite;
 	var instructions:FlxText;
@@ -21,10 +22,6 @@ class UI extends FlxSpriteGroup {
 		healthCounter = new FlxText(heart.x + heart.frameWidth + 12, 0, "1", 22);
 		healthCounter.color = FlxColor.RED;
 		add(healthCounter);
-
-		for (member in this) {
-			member.scrollFactor.set();
-		}
 
 		function thump(object:FlxSprite) {
 			var scale = object.scale.x + object.scale.x * ScaleIncreasePercentage;
@@ -51,6 +48,15 @@ class UI extends FlxSpriteGroup {
 		instructions.alignment = CENTER;
 		instructions.color = FlxColor.BLACK;
 		add(instructions);
+
+		scoreText = new FlxText(320, 0, 0, "Score: 0", 16);
+		scoreText.fieldWidth = FlxG.width;
+		scoreText.alignment = CENTER;
+		add(scoreText);
+
+		for (member in this) {
+			member.scrollFactor.set();
+		}
 	}
 
 	public function endIntro(callback:() -> Void) {
@@ -100,6 +106,47 @@ class UI extends FlxSpriteGroup {
 
 		for (thump in thumps) {
 			thump.cancel();
+		}
+
+		FlxTween.tween(scoreText, {x: 0, y: FlxG.height / 2 - 150, size: 64}, 0.3, {
+			onComplete: _ -> {
+				new FlxTimer().start(1, function(_) {
+					scoreText.text = "Final " + scoreText.text;
+					FlxG.sound.play("assets/sounds/final.wav");
+					new FlxTimer().start(1, function(_) {
+						new FlxTimer().start(1, function(_) {
+							var deaths = FlxG.save.data.deaths;
+							if (deaths == null) {
+								return;
+							}
+							scoreText.text += "\nDeaths: " + deaths;
+							FlxG.sound.play("assets/sounds/final3.wav");
+						});
+						var highscore = FlxG.save.data.highscore;
+						if (highscore == null) {
+							return;
+						}
+						scoreText.text += "\nHighscore: " + highscore;
+						FlxG.sound.play("assets/sounds/final2.wav");
+					});
+				});
+			}
+		});
+	}
+
+	public function updateScore(score:Int) {
+		scoreText.text = 'Score: $score';
+		var scale = 3;
+		scoreText.scale.set(scale, scale);
+	}
+
+	override function update(elapsed:Float) {
+		super.update(elapsed);
+
+		var scale = scoreText.scale.x;
+		if (scale > 1) {
+			scale -= 0.1;
+			scoreText.scale.set(scale, scale);
 		}
 	}
 }

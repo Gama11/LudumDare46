@@ -6,6 +6,7 @@ class Enemy extends FlxSprite implements ITeam {
 	static final FireRate = 0.2;
 
 	public var team(default, null):Team = Enemy;
+	public var score(default, null):Int;
 
 	final fireTimer = new FlxTimer();
 	final bullets:Bullets;
@@ -32,6 +33,7 @@ class Enemy extends FlxSprite implements ITeam {
 		switch type {
 			case Basic(xDir):
 				velocity.x = 50 * xDir;
+				score = 1;
 		}
 	}
 
