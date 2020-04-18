@@ -1,6 +1,5 @@
-import flixel.addons.display.FlxStarField.FlxStarField2D;
+import flixel.addons.display.FlxStarField.FlxStarField2D; import openfl.filters.ShaderFilter; class PlayState extends FlxState {
 
-class PlayState extends FlxState {
 	public static var FirstWaveBeaten = false;
 	public static final IntroDuration = 3;
 
@@ -66,6 +65,8 @@ class PlayState extends FlxState {
 		if (skip) {
 			skipIntro();
 		}
+
+		FlxG.camera.setFilters([new ShaderFilter(new CameraShader())]);
 	}
 
 	override public function update(elapsed:Float) {

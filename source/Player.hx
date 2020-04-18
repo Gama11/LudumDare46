@@ -62,30 +62,34 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	override function update(elapsed:Float) {
-		if (FlxG.mouse.justPressedRight && !rolling && canRoll) {
-			rolling = true;
-			canRoll = false;
-			solid = false;
-			setColorTransform(1, 1, 1, 122, 122, 122);
-			FlxG.sound.play("assets/sounds/jump.wav");
-			FlxTween.tween(this, {
-				"scale.x": -1,
-				"scale.y": 1.2,
-				x: FlxG.mouse.x - frameWidth / 2,
-				y: FlxG.mouse.y - frameHeight / 2
-			}, RollDuration, {
-				type: PINGPONG,
-				onComplete: function(tween) {
-					tween.cancel();
-					scale.set(1, 1);
-					rolling = false;
-					solid = true;
-					setColorTransform();
-					new FlxTimer().start(RollCooldown, _ -> {
-						canRoll = true;
-					});
-				}
-			});
+		if (FlxG.mouse.justPressedRight) {
+			if (!rolling && canRoll) {
+				rolling = true;
+				canRoll = false;
+				solid = false;
+				setColorTransform(1, 1, 1, 122, 122, 122);
+				FlxG.sound.play("assets/sounds/jump.wav");
+				FlxTween.tween(this, {
+					"scale.x": -1,
+					"scale.y": 1.2,
+					x: FlxG.mouse.x - frameWidth / 2,
+					y: FlxG.mouse.y - frameHeight / 2
+				}, RollDuration, {
+					type: PINGPONG,
+					onComplete: function(tween) {
+						tween.cancel();
+						scale.set(1, 1);
+						rolling = false;
+						solid = true;
+						setColorTransform();
+						new FlxTimer().start(RollCooldown, _ -> {
+							canRoll = true;
+						});
+					}
+				});
+			} else {
+				FlxG.sound.play("assets/sounds/blocked.wav");
+			}
 		}
 
 		if (!FlxG.keys.pressed.SPACE && !rolling) {

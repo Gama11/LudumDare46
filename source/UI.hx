@@ -3,6 +3,7 @@ import flixel.addons.effects.chainable.FlxGlitchEffect;
 
 class UI extends FlxSpriteGroup {
 	static final ScaleIncreasePercentage = 0.5;
+	static final ThumpInterval = 2;
 
 	var heart:FlxSprite;
 	var healthCounter:FlxText;
@@ -10,7 +11,7 @@ class UI extends FlxSpriteGroup {
 
 	var effectSprite:FlxEffectSprite;
 	var instructions:FlxText;
-	var thumps:Array<FlxTween> = [];
+	var thumps:Array<{function cancel():Void;}> = [];
 
 	public function new() {
 		super();
@@ -27,16 +28,17 @@ class UI extends FlxSpriteGroup {
 			var scale = object.scale.x + object.scale.x * ScaleIncreasePercentage;
 			var options:TweenOptions = {
 				type: FlxTweenType.LOOPING,
-				ease: FlxEase.expoIn,
-				onComplete: function(_) {
-					FlxG.sound.play("assets/sounds/thump.wav", 0.3);
-				}
+				ease: FlxEase.expoIn
 			};
-			thumps.push(FlxTween.tween(object.scale, {x: scale, y: scale}, 2, options));
+			thumps.push(FlxTween.tween(object.scale, {x: scale, y: scale}, ThumpInterval, options));
 		}
 
 		thump(heart);
 		thump(healthCounter);
+		thumps.push(new FlxTimer().start(ThumpInterval, function(_) {
+			FlxG.sound.play("assets/sounds/thump.wav", 0.3);
+			FlxG.camera.flash(FlxColor.RED, 0.1);
+		}, 0));
 
 		var message = new FlxText(0, 0, "You're on your last life, pilot\n - better make the most of it!", 36);
 		message.color = FlxColor.GRAY;
