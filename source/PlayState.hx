@@ -3,6 +3,7 @@ class PlayState extends FlxState {
 	var bullets:Bullets;
 	var enemies:Enemies;
 	var cursor:FlxSprite;
+	var ui:UI;
 
 	override public function create() {
 		bullets = new Bullets();
@@ -23,6 +24,7 @@ class PlayState extends FlxState {
 		add(enemies);
 		add(player);
 		add(cursor);
+		add(ui = new UI());
 
 		FlxG.mouse.visible = false;
 
