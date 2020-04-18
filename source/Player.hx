@@ -32,6 +32,7 @@ class Player extends FlxSprite implements ITeam {
 
 	final bullets:Bullets;
 	var rolling = false;
+	var firing = false;
 	var currentSpeed = 0.007;
 
 	public function new(bullets) {
@@ -106,7 +107,11 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	public function startFiring() {
+		if (firing) {
+			return;
+		}
 		new FlxTimer().start(FireRate, shoot, 0);
 		currentSpeed = LerpFactor;
+		firing = true;
 	}
 }

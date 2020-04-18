@@ -47,7 +47,7 @@ class UI extends FlxSpriteGroup {
 		add(instructions);
 	}
 
-	public function endIntro(callback:()->Void) {
+	public function endIntro(callback:() -> Void) {
 		FlxTween.tween(effectSprite, {alpha: 0}, 1, {
 			onComplete: function(_) {
 				FlxTween.tween(instructions, {x: 25}, 0.1, {
@@ -60,5 +60,10 @@ class UI extends FlxSpriteGroup {
 				});
 			}
 		});
+	}
+
+	public function skipIntro() {
+		effectSprite.kill();
+		instructions.kill();
 	}
 }

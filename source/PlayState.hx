@@ -69,6 +69,10 @@ class PlayState extends FlxState {
 		if (FlxG.keys.justPressed.R) {
 			FlxG.resetState();
 		}
+		if (FlxG.keys.justPressed.SPACE) {
+			player.startFiring();
+			ui.skipIntro();
+		}
 	}
 
 	function onBulletHit(bullet:Bullet, object:ITeam) {
