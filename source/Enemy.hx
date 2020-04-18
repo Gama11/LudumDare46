@@ -18,7 +18,6 @@ class Enemy extends FlxSprite implements ITeam {
 	public function new(bullets) {
 		super();
 		this.bullets = bullets;
-		makeGraphic(30, 30, FlxColor.GREEN);
 	}
 
 	public function init(x, y, type) {
@@ -29,11 +28,13 @@ class Enemy extends FlxSprite implements ITeam {
 		fireTimer.cancel();
 		fireTimer.start(FireRate, _ -> shoot(), 0);
 		health = maxHealth = 10;
+		scale.set(2, 2);
 
 		switch type {
 			case Basic(xDir):
 				velocity.x = 50 * xDir;
 				score = 1;
+				loadGraphic("assets/images/invader1.png");
 		}
 	}
 
@@ -56,7 +57,7 @@ class Enemy extends FlxSprite implements ITeam {
 		var y = y + frameHeight - 2;
 		var x = x + frameWidth / 2;
 
-		var fire = bullets.spawn.bind(x, y, Enemy, FlxColor.RED, _, Normal, 300);
+		var fire = bullets.spawn.bind(x - Bullet.Width / 2, y, Enemy, FlxColor.GREEN, _, Normal, 300);
 		fire(angleOffset - deltaAngle);
 		fire(angleOffset);
 		fire(angleOffset + deltaAngle);

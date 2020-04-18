@@ -4,6 +4,7 @@ enum BulletType {
 }
 
 class Bullet extends FlxSprite implements ITeam {
+	public static final Width = 4;
 	static inline final WiggleStrength = 20;
 
 	public var team(default, null):Team = Enemy;
@@ -15,7 +16,7 @@ class Bullet extends FlxSprite implements ITeam {
 
 	public function new() {
 		super();
-		makeGraphic(8, 4);
+		makeGraphic(8, Width);
 	}
 
 	public function init(x, y, team, color, angle, type, speed) {

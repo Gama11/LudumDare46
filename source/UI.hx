@@ -108,7 +108,7 @@ class UI extends FlxSpriteGroup {
 			thump.cancel();
 		}
 
-		FlxTween.tween(scoreText, {x: 0, y: FlxG.height / 2 - 150, size: 64}, 0.3, {
+		FlxTween.tween(scoreText, {x: 0, y: FlxG.height / 2 - 150}, 0.3, {
 			onComplete: _ -> {
 				new FlxTimer().start(1, function(_) {
 					scoreText.text = "Final " + scoreText.text;
@@ -130,6 +130,9 @@ class UI extends FlxSpriteGroup {
 						FlxG.sound.play("assets/sounds/final2.wav");
 					});
 				});
+			},
+			onUpdate: function(tween) {
+				scoreText.size = Std.int(16 + tween.percent * (64 - 16));
 			}
 		});
 	}

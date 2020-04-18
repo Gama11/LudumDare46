@@ -18,7 +18,7 @@ class PlayState extends FlxState {
 		bgColor = 0x222222;
 		FlxG.camera.zoom = 0.1;
 
-		var starField = new FlxStarField2D(Std.int(-FlxG.width / 2), Std.int(-FlxG.height / 2), FlxG.width * 2, FlxG.height * 2);
+		var starField = new FlxStarField2D();
 		starField.starVelocityOffset.set(0, 1);
 
 		bullets = new Bullets();
@@ -27,7 +27,7 @@ class PlayState extends FlxState {
 		player = new Player(bullets);
 		player.screenCenter();
 
-		cursor = new FlxSprite("assets/images/target.png");
+		cursor = new FlxSprite("assets/images/target2.png");
 
 		var uiCamera = FlxG.cameras.add(new FlxCamera());
 		ui = new UI();
