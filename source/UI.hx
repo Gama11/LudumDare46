@@ -1,5 +1,5 @@
 class UI extends FlxSpriteGroup {
-	static final ScaleIncreasePercentage = 0.3;
+	static final ScaleIncreasePercentage = 0.4;
 
 	public function new() {
 		super();
@@ -16,15 +16,16 @@ class UI extends FlxSpriteGroup {
 			member.scrollFactor.set();
 		}
 
-		function tween(object:FlxSprite) {
+		function thump(object:FlxSprite) {
 			var scale = object.scale.x + object.scale.x * ScaleIncreasePercentage;
-			FlxTween.tween(object.scale, {x: scale, y: scale}, 1, {
-				type: LOOPING,
+			var options = {
+				type: FlxTweenType.LOOPING,
 				ease: FlxEase.expoIn
-			});
+			};
+			FlxTween.tween(object.scale, {x: scale, y: scale}, 1, options);
 		}
 
-		tween(heart);
-		tween(healthCounter);
+		thump(heart);
+		thump(healthCounter);
 	}
 }
