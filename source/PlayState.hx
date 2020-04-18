@@ -1,3 +1,5 @@
+import flixel.addons.display.FlxStarField.FlxStarField2D;
+
 class PlayState extends FlxState {
 	public static final IntroDuration = 3;
 
@@ -12,6 +14,9 @@ class PlayState extends FlxState {
 
 		bgColor = 0x222222;
 		FlxG.camera.zoom = 0.1;
+
+		var starField = new FlxStarField2D();
+		starField.starVelocityOffset.set(0, 1);
 
 		bullets = new Bullets();
 		enemies = new Enemies();
@@ -29,6 +34,7 @@ class PlayState extends FlxState {
 		ui = new UI();
 		ui.cameras = [uiCamera];
 
+		add(starField);
 		add(bullets);
 		add(enemies);
 		add(cursor);
