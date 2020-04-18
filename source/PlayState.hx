@@ -56,7 +56,7 @@ class PlayState extends FlxState {
 		FlxG.overlap(bullets, enemies, onBulletHit);
 
 		cursor.x = FlxG.mouse.x - cursor.frameWidth / 2;
-		cursor.y = FlxG.mouse.y - cursor.frameHeight / 2;
+		cursor.y = FlxG.mouse.y - cursor.frameHeight / 2 + 10;
 
 		if (FlxG.keys.justPressed.R) {
 			FlxG.resetState();

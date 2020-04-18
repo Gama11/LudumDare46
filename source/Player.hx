@@ -5,12 +5,13 @@ class Player extends FlxSprite implements ITeam {
 	static final BulletOffsetX = 5;
 	static final BulletOffsetY = 10;
 	static final RollDuration = 0.5;
+	static final Kickback = 6;
 
 	public var team(default, null):Team = Player;
 
 	final bullets:Bullets;
 	var rolling = false;
-	var currentSpeed = 0.004;
+	var currentSpeed = 0.007;
 
 	public function new(bullets) {
 		super(AssetPaths.ship__png);
@@ -54,6 +55,7 @@ class Player extends FlxSprite implements ITeam {
 		fire(x + BulletOffsetX, y + BulletOffsetY);
 		fire(x + frameWidth - BulletOffsetX, y + BulletOffsetY);
 		FlxG.sound.play('assets/sounds/pew$Sound.wav', 0.1);
+		y += Kickback;
 	}
 
 	public function startFiring() {
