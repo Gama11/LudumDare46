@@ -12,9 +12,10 @@ class Bullet extends FlxSprite implements ITeam {
 		makeGraphic(3, 8);
 	}
 
-	public function init(x, y, team) {
+	public function init(x, y, team, color) {
 		reset(x, y);
 		this.team = team;
+		this.color = color;
 		velocity.y = -MaxVelocity;
 		scale.set(0.1, 0.1);
 		if (scaleTween != null) {

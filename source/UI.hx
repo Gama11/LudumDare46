@@ -5,6 +5,7 @@ class UI extends FlxSpriteGroup {
 	static final ScaleIncreasePercentage = 0.4;
 
 	var effectSprite:FlxEffectSprite;
+	var instructions:FlxText;
 
 	public function new() {
 		super();
@@ -38,9 +39,26 @@ class UI extends FlxSpriteGroup {
 		effectSprite = new FlxEffectSprite(message, [new FlxGlitchEffect(4, 4)]);
 		effectSprite.setPosition(40, FlxG.height - 120);
 		add(effectSprite);
+
+		instructions = new FlxText(-1000, FlxG.height / 2, "Mouse to move. Right Click to Dodge Roll. Don't die.", 24);
+		instructions.borderStyle = OUTLINE;
+		instructions.borderColor = FlxColor.WHITE;
+		instructions.color = FlxColor.BLACK;
+		add(instructions);
 	}
 
-	public function endIntro() {
-		FlxTween.tween(effectSprite, {alpha: 0}, 3);
+	public function endIntro(callback:()->Void) {
+		FlxTween.tween(effectSprite, {alpha: 0}, 1, {
+			onComplete: function(_) {
+				FlxTween.tween(instructions, {x: 25}, 0.1, {
+					onComplete: function(_) {
+						new FlxTimer().start(3, function(_) {
+							FlxTween.tween(instructions, {x: 1000}, 0.1);
+							callback();
+						});
+					}
+				});
+			}
+		});
 	}
 }

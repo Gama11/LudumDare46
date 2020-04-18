@@ -21,7 +21,6 @@ class PlayState extends FlxState {
 		}
 
 		player = new Player(bullets);
-		player.active = false;
 		player.screenCenter();
 
 		cursor = new FlxSprite("assets/images/target.png");
@@ -32,8 +31,8 @@ class PlayState extends FlxState {
 
 		add(bullets);
 		add(enemies);
-		add(player);
 		add(cursor);
+		add(player);
 		add(ui);
 
 		FlxG.mouse.visible = false;
@@ -44,8 +43,9 @@ class PlayState extends FlxState {
 
 		FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.expoIn});
 		new FlxTimer().start(IntroDuration, function(_) {
-			ui.endIntro();
-			player.active = true;
+			ui.endIntro(() -> {
+				player.startFiring();
+			});
 		});
 		new FlxTimer().start(1, _ -> FlxG.sound.play("assets/sounds/intro.wav"));
 	}
@@ -58,7 +58,9 @@ class PlayState extends FlxState {
 		cursor.x = FlxG.mouse.x - cursor.frameWidth / 2;
 		cursor.y = FlxG.mouse.y - cursor.frameHeight / 2;
 
-		cursor.visible = FlxMath.distanceBetween(cursor, player) > 10;
+		if (FlxG.keys.justPressed.R) {
+			FlxG.resetState();
+		}
 	}
 
 	function onBulletHit(bullet:Bullet, object:ITeam) {
