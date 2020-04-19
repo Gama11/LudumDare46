@@ -46,7 +46,7 @@ class UI extends FlxSpriteGroup {
 		effectSprite.setPosition(40, FlxG.height - 120);
 		add(effectSprite);
 
-		var instructionMessage = "Mouse to move.\nWell, barely - your engine is damaged.\nRight Click to Dodge Roll.\nHold Space to Lock Position.\nDon't die.";
+		var instructionMessage = "Mouse to move.\nWell, barely - your ship is damaged.\nRight Click to Dodge Roll.\nHold Space to Lock Position.\nDon't die.";
 		instructions = new FlxText(-1000, FlxG.height / 2 - 50, instructionMessage, 24);
 		instructions.borderStyle = OUTLINE;
 		instructions.borderColor = FlxColor.WHITE;
