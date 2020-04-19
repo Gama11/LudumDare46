@@ -8,6 +8,7 @@ class MenuState extends FlxState {
 
 	override function create() {
 		super.create();
+		FlxG.timeScale = 1;
 
 		var starField = new FlxStarField2D();
 		starField.starVelocityOffset.set(0, 1);
