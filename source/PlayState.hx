@@ -1,5 +1,7 @@
-import flixel.addons.display.FlxStarField.FlxStarField2D; import openfl.filters.ShaderFilter; class PlayState extends FlxState {
+import flixel.addons.display.FlxStarField.FlxStarField2D;
+import openfl.filters.ShaderFilter;
 
+class PlayState extends FlxState {
 	public static var FirstWaveBeaten = false;
 	public static final IntroDuration = 3;
 
@@ -90,6 +92,9 @@ import flixel.addons.display.FlxStarField.FlxStarField2D; import openfl.filters.
 		if (FlxG.keys.justPressed.D) {
 			player.kill();
 		}
+		if (FlxG.keys.justPressed.I) {
+			player.health = 99999;
+		}
 		#end
 
 		if (gameStarted) {
@@ -111,6 +116,24 @@ import flixel.addons.display.FlxStarField.FlxStarField2D; import openfl.filters.
 				pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10);
 			} else {
 				pickupChance += 0.01;
+			}
+
+			for (bullet in bullets) {
+				if (bullet.type == Homing) {
+					var minDistance = Math.POSITIVE_INFINITY;
+					var target = null;
+					for (enemy in enemies) {
+						if (!enemy.exists || enemy.y < 0) {
+							continue;
+						}
+						var distance = FlxMath.distanceBetween(enemy, bullet);
+						if (distance < minDistance && distance < Bullet.HomingDistance) {
+							minDistance = distance;
+							target = enemy;
+						}
+					}
+					bullet.target = target;
+				}
 			}
 		}
 	}

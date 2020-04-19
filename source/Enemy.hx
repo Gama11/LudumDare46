@@ -28,7 +28,7 @@ class Enemy extends FlxSprite implements ITeam {
 		health = 4;
 		fireTimer.cancel();
 		fireTimer.start(FireRate, _ -> shoot(), 0);
-		health = maxHealth = 10;
+		health = maxHealth = 12;
 		scale.set(2, 2);
 		waitUntilNextVolley = FlxG.random.int(0, 5);
 		shot = 0;

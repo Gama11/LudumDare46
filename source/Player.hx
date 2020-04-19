@@ -110,7 +110,7 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	function shoot(_) {
-		var fire = bullets.spawn.bind(_, _, Player, FlxColor.YELLOW, 0, Wiggle, 700);
+		var fire = bullets.spawn.bind(_, _, Player, FlxColor.YELLOW, 0, Homing, 700);
 		fire(x + BulletOffsetX, y + BulletOffsetY);
 		fire(x + frameWidth - BulletOffsetX, y + BulletOffsetY);
 

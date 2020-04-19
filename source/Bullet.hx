@@ -1,18 +1,23 @@
 enum BulletType {
 	Normal;
 	Wiggle;
+	Homing;
 }
 
 class Bullet extends FlxSprite implements ITeam {
+	public static final HomingDistance = 500;
+
 	public static final Width = 4;
-	static inline final WiggleStrength = 20;
+	static final WiggleStrength = 20;
 
 	public var team(default, null):Team = Enemy;
 	public var damage(default, null) = 1;
+	public var type(default, null):BulletType;
+
+	public var target:FlxSprite;
 
 	var scaleTween:FlxTween;
 	var wiggleTween:FlxTween;
-	var type:BulletType;
 
 	public function new() {
 		super();
@@ -26,6 +31,7 @@ class Bullet extends FlxSprite implements ITeam {
 		this.team = team;
 		this.color = color;
 		this.angle = angle;
+		this.type = type;
 
 		velocity.copyFrom(FlxVelocity.velocityFromAngle(angle, speed));
 
@@ -45,9 +51,19 @@ class Bullet extends FlxSprite implements ITeam {
 	}
 
 	override function update(elapsed:Float) {
-		super.update(elapsed);
 		if (y > FlxG.height + 20 || y < -20) {
 			exists = false;
 		}
+
+		if (type == Homing && target != null) {
+			var vec:FlxVector = velocity;
+			var angleBetween = FlxAngle.angleBetween(this, target, true);
+			if (y > target.y) {
+				angle = FlxMath.lerp(angle, angleBetween, 0.05);
+				velocity = FlxVelocity.velocityFromAngle(angle, vec.length);
+			}
+		}
+
+		super.update(elapsed);
 	}
 }
