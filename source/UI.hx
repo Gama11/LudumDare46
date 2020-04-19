@@ -1,6 +1,7 @@
 import flixel.addons.effects.chainable.FlxEffectSprite;
 import flixel.addons.effects.chainable.FlxGlitchEffect;
 import flixel.ui.FlxBar;
+import flixel.util.FlxTimer.FlxTimerManager;
 
 class UI extends FlxSpriteGroup {
 	static final ScaleIncreasePercentage = 0.5;
@@ -16,9 +17,12 @@ class UI extends FlxSpriteGroup {
 	var effectSprite:FlxEffectSprite;
 	var instructions:FlxText;
 	var instructionsThere:Bool = false;
+	var gameEndHere:Bool = false;
 	var rechargeBar:FlxBar;
 	var thumps:Array<{function cancel():Void;}> = [];
 	var endIntroCallback:() -> Void;
+	var tweens = new FlxTweenManager();
+	var timers = new FlxTimerManager();
 
 	public function new(player) {
 		super();
@@ -138,22 +142,23 @@ class UI extends FlxSpriteGroup {
 		}
 
 		var delay = 0.6;
-		FlxTween.tween(scoreText, {x: 0, y: FlxG.height / 2 - 150}, 0.3, {
+		tweens.tween(scoreText, {x: 0, y: FlxG.height / 2 - 150}, 0.3, {
 			onComplete: _ -> {
-				new FlxTimer().start(1, function(_) {
+				new FlxTimer(timers).start(1, function(_) {
 					scoreText.text = "Final " + scoreText.text;
 					FlxG.sound.play("assets/sounds/final.wav");
-					new FlxTimer().start(delay, function(_) {
-						new FlxTimer().start(delay, function(_) {
+					new FlxTimer(timers).start(delay, function(_) {
+						new FlxTimer(timers).start(delay, function(_) {
 							var deaths = FlxG.save.data.deaths;
 							if (deaths == null) {
 								return;
 							}
 							scoreText.text += "\nDeaths: " + deaths;
 							FlxG.sound.play("assets/sounds/final.wav");
-							new FlxTimer().start(delay, function(_) {
-								scoreText.text += "\n\nPress R to Retry";
+							new FlxTimer(timers).start(delay, function(_) {
+								scoreText.text += "\n\n[Click to Retry]";
 								FlxG.sound.play("assets/sounds/final.wav");
+								gameEndHere = true;
 							});
 						});
 						var highscore = FlxG.save.data.highscore;
@@ -186,6 +191,9 @@ class UI extends FlxSpriteGroup {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
+		tweens.update(1 / 60);
+		timers.update(1 / 60);
+
 		function scaleDown(what:FlxText) {
 			var scale = what.scale.x;
 			if (scale > 1) {
@@ -203,6 +211,10 @@ class UI extends FlxSpriteGroup {
 			FlxTween.tween(instructions, {x: 1000}, 0.1);
 			endIntroCallback();
 			endIntroCallback = null;
+		}
+
+		if (gameEndHere && FlxG.mouse.justPressed) {
+			FlxG.switchState(new PlayState());
 		}
 	}
 }

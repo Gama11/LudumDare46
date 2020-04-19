@@ -193,6 +193,7 @@ class Player extends FlxSprite implements ITeam {
 		var almostBlack = FlxColor.BLACK;
 		almostBlack.alphaFloat = 0.9;
 		FlxG.camera.fade(almostBlack, 10);
+		FlxTween.tween(FlxG, {timeScale: 0.1});
 	}
 
 	override function hurt(damage:Float) {
