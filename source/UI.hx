@@ -12,6 +12,7 @@ class UI extends FlxSpriteGroup {
 	var heart:FlxSprite;
 	var healthCounter:FlxText;
 	var scoreText:FlxText;
+	var retryText:FlxText;
 	var difficultyText:FlxText;
 
 	var effectSprite:FlxEffectSprite;
@@ -142,7 +143,7 @@ class UI extends FlxSpriteGroup {
 		}
 
 		var delay = 0.6;
-		tweens.tween(scoreText, {x: 0, y: FlxG.height / 2 - 150}, 0.3, {
+		tweens.tween(scoreText, {x: 0, y: FlxG.height / 2 - 200}, 0.3, {
 			onComplete: _ -> {
 				new FlxTimer(timers).start(1, function(_) {
 					scoreText.text = "Final " + scoreText.text;
@@ -156,7 +157,14 @@ class UI extends FlxSpriteGroup {
 							scoreText.text += "\nDeaths: " + deaths;
 							FlxG.sound.play("assets/sounds/final.wav");
 							new FlxTimer(timers).start(delay, function(_) {
-								scoreText.text += "\n\n[Click to Retry]";
+								retryText = new FlxText(0, 650, 0, "[Click to Retry]", 38);
+								retryText.screenCenter(X);
+								retryText.alpha = 0;
+								add(retryText);
+								tweens.tween(retryText, {alpha: 1}, 1.5, {
+									type: PINGPONG
+								});
+
 								FlxG.sound.play("assets/sounds/final.wav");
 								gameEndHere = true;
 							});
