@@ -1,6 +1,7 @@
 enum PickupType {
 	Score;
 	Bomb;
+	Slowdown;
 }
 
 class Pickup extends FlxSprite {
@@ -24,20 +25,11 @@ class Pickup extends FlxSprite {
 		switch type {
 			case Score:
 				loadGraphic("assets/images/pickup.png");
-
 			case Bomb:
 				loadGraphic("assets/images/X.png");
+			case Slowdown:
+				loadGraphic("assets/images/slowdown.png");
 		}
-	}
-
-	override function kill() {
-		solid = false;
-		FlxTween.tween(this, {x: FlxG.width - 80, y: 0}, 0.5, {
-			ease: FlxEase.quadIn,
-			onComplete: _ -> {
-				exists = false;
-			}
-		});
 	}
 
 	override function update(elapsed:Float) {

@@ -144,7 +144,7 @@ class Enemy extends FlxSprite implements ITeam {
 
 	function circularShot() {
 		var shotAngle = FlxAngle.wrapAngle(lastShotAngle + 5);
-		bullets.spawn(x + 20, y + 20, Enemy, color, shotAngle, Normal, 150);
+		bullets.spawn(x + 20, y + 10, Enemy, color, shotAngle, Normal, 150);
 		lastShotAngle = shotAngle;
 	}
 

@@ -3,3 +3,6 @@ cap ship speed
 "bullet storm" at y direction
 boss warning
 some difficulty scaling
+warp sound direction?
+stun enemies on bomb
+maybe no zoom in on death?

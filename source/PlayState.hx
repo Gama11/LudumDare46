@@ -216,11 +216,29 @@ class PlayState extends FlxState {
 		}
 	}
 
+	var slowDownFadeTween:FlxTween;
+
 	function onCollectPickup(pickup:Pickup, player:Player) {
+		pickup.solid = false;
+
+		function tween(target, ?f:() -> Void) {
+			FlxTween.tween(pickup, {x: target, y: 0}, 0.5, {
+				ease: FlxEase.quadIn,
+				onComplete: _ -> {
+					pickup.kill();
+					if (f != null) {
+						f();
+					}
+				}
+			});
+		}
+
 		switch pickup.type {
 			case Score:
-				increaseScore(pickup.score);
-				FlxG.sound.play("assets/sounds/coin.wav");
+				tween(FlxG.width - 80, function() {
+					increaseScore(pickup.score);
+					FlxG.sound.play("assets/sounds/coin.wav");
+				});
 
 			case Bomb:
 				for (bullet in bullets) {
@@ -228,8 +246,24 @@ class PlayState extends FlxState {
 				}
 				FlxG.camera.shake();
 				FlxG.sound.play("assets/sounds/bomb.wav");
+				pickup.kill();
+
+			case Slowdown:
+				if (slowDownFadeTween != null) {
+					slowDownFadeTween.cancel();
+				}
+				tween(80, () -> {
+					ui.slowdownIcon.alpha = 1;
+					FlxG.timeScale = 0.5;
+					FlxG.sound.play("assets/sounds/slowdown.wav");
+					var duration = 3;
+					var fadeOut = 1;
+					new FlxTimer().start(duration, function(_) {
+						FlxTween.tween(FlxG, {timeScale: 1}, fadeOut);
+					});
+					slowDownFadeTween = FlxTween.tween(ui.slowdownIcon, {alpha: 0}, duration + fadeOut);
+				});
 		}
-		pickup.kill();
 	}
 
 	function skipIntro() {

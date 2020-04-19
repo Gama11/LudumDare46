@@ -6,6 +6,8 @@ class UI extends FlxSpriteGroup {
 	static final ScaleIncreasePercentage = 0.5;
 	static final ThumpInterval = 2;
 
+	public var slowdownIcon(default, null):FlxSprite;
+
 	var heart:FlxSprite;
 	var healthCounter:FlxText;
 	var scoreText:FlxText;
@@ -25,6 +27,11 @@ class UI extends FlxSpriteGroup {
 		healthCounter = new FlxText(heart.x + heart.frameWidth + 12, 0, "1", 22);
 		healthCounter.color = FlxColor.RED;
 		add(healthCounter);
+
+		slowdownIcon = new FlxSprite(70, 10, "assets/images/slowdown.png");
+		slowdownIcon.alpha = 0;
+		slowdownIcon.scale.set(2, 2);
+		add(slowdownIcon);
 
 		function thump(object:FlxSprite) {
 			var scale = object.scale.x + object.scale.x * ScaleIncreasePercentage;
@@ -117,6 +124,7 @@ class UI extends FlxSpriteGroup {
 
 		heart.visible = false;
 		rechargeBar.visible = false;
+		slowdownIcon.visible = false;
 
 		for (thump in thumps) {
 			thump.cancel();
