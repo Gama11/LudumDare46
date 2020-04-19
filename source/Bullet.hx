@@ -59,7 +59,7 @@ class Bullet extends FlxSprite implements ITeam {
 			var vec:FlxVector = velocity;
 			var angleBetween = FlxAngle.angleBetween(this, target, true);
 			if (y > target.y) {
-				angle = FlxMath.lerp(angle, angleBetween, 0.05);
+				angle = FlxMath.lerp(angle, angleBetween, 0.1);
 				velocity = FlxVelocity.velocityFromAngle(angle, vec.length);
 			}
 		}

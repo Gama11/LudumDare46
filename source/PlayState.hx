@@ -178,7 +178,7 @@ class PlayState extends FlxState {
 				var type = FlxG.random.getObject(PickupType.createAll());
 				pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10, type);
 			} else {
-				pickupChance += 0.001;
+				pickupChance += 0.001 * elapsed * 60;
 			}
 
 			for (bullet in bullets) {

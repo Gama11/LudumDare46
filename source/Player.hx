@@ -18,7 +18,7 @@ class SmokeParticle extends FlxParticle {
 }
 
 class Player extends FlxSprite implements ITeam {
-	static final LerpFactor = 0.02;
+	static final LerpFactor = 0.015;
 	static final FireRate = 0.2;
 	static final BulletOffsetX = 5;
 	static final BulletOffsetY = 10;
@@ -65,7 +65,7 @@ class Player extends FlxSprite implements ITeam {
 	}
 
 	override function update(elapsed:Float) {
-		if (FlxG.mouse.justPressedRight) {
+		if (FlxG.mouse.justPressed) {
 			if (!rolling && isCharged()) {
 				rolling = true;
 				solid = false;
@@ -92,7 +92,7 @@ class Player extends FlxSprite implements ITeam {
 			}
 		}
 
-		if (!FlxG.keys.pressed.SPACE && !FlxG.mouse.pressed && !rolling) {
+		if (!FlxG.keys.pressed.SPACE && !FlxG.mouse.pressedRight && !rolling) {
 			var factor = LerpFactor;
 			x = FlxMath.lerp(x, FlxG.mouse.x - frameWidth / 2, factor);
 			y = FlxMath.lerp(y, FlxG.mouse.y - frameHeight / 2, factor);
