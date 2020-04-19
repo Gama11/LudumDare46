@@ -119,6 +119,9 @@ class Enemy extends FlxSprite implements ITeam {
 	}
 
 	function tripleShot() {
+		if (!active) {
+			return;
+		}
 		if (waitUntilNextVolley > 0) {
 			waitUntilNextVolley--;
 			return;
@@ -144,6 +147,9 @@ class Enemy extends FlxSprite implements ITeam {
 	var lastShotAngle = 0.0;
 
 	function circularShot() {
+		if (!active) {
+			return;
+		}
 		var shotAngle = FlxAngle.wrapAngle(lastShotAngle + 5);
 		bullets.spawn(x + 20, y + 10, Enemy, color, shotAngle, Normal, 150);
 		lastShotAngle = shotAngle;

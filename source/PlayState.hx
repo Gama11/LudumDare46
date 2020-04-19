@@ -248,6 +248,14 @@ class PlayState extends FlxState {
 				FlxG.camera.shake();
 				FlxG.sound.play("assets/sounds/bomb.wav");
 				pickup.kill();
+				for (enemy in enemies) {
+					enemy.active = false;
+				}
+				new FlxTimer().start(2, function(_) {
+					for (enemy in enemies) {
+						enemy.active = true;
+					}
+				});
 
 			case Slowdown:
 				if (slowDownFadeTween != null) {
@@ -255,7 +263,7 @@ class PlayState extends FlxState {
 				}
 				tween(80, () -> {
 					ui.slowdownIcon.alpha = 1;
-					FlxG.timeScale = 0.5;
+					FlxG.timeScale = 0.7;
 					FlxG.sound.play("assets/sounds/slowdown.wav");
 					var duration = 3;
 					var fadeOut = 1;
