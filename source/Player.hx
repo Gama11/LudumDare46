@@ -29,7 +29,7 @@ class Player extends FlxSprite implements ITeam {
 	public var team(default, null):Team = Player;
 	public var exhaust1(default, null):FlxTypedEmitter<SmokeParticle>;
 	public var exhaust2(default, null):FlxTypedEmitter<SmokeParticle>;
-	public var canRoll(default, null) = true;
+	public var charge(default, null):Float = 1;
 
 	final bullets:Bullets;
 	var firing = false;
@@ -60,13 +60,17 @@ class Player extends FlxSprite implements ITeam {
 		exhaust2 = makeExhaust();
 	}
 
+	function isCharged() {
+		return charge >= 1;
+	}
+
 	override function update(elapsed:Float) {
 		if (FlxG.mouse.justPressedRight) {
-			if (!rolling && canRoll) {
+			if (!rolling && isCharged()) {
 				rolling = true;
-				canRoll = false;
 				solid = false;
-				setColorTransform(1, 1, 1, 122, 122, 122);
+				charge = 0;
+				setColorTransform(1, 0, 0, 255, 0, 0);
 				FlxG.sound.play("assets/sounds/jump.wav");
 				FlxTween.tween(this, {
 					"scale.x": -1,
@@ -81,9 +85,6 @@ class Player extends FlxSprite implements ITeam {
 						rolling = false;
 						solid = true;
 						setColorTransform();
-						new FlxTimer().start(RollCooldown, _ -> {
-							canRoll = true;
-						});
 					}
 				});
 			} else {
@@ -95,6 +96,10 @@ class Player extends FlxSprite implements ITeam {
 			var factor = LerpFactor;
 			x = FlxMath.lerp(x, FlxG.mouse.x - frameWidth / 2, factor);
 			y = FlxMath.lerp(y, FlxG.mouse.y - frameHeight / 2, factor);
+		}
+
+		if (!isCharged() && !rolling) {
+			charge += elapsed / RollCooldown;
 		}
 
 		var offset = 10;

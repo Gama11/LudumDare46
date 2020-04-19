@@ -36,7 +36,7 @@ class PlayState extends FlxState {
 		cursor = new FlxSprite("assets/images/target2.png");
 
 		var uiCamera = FlxG.cameras.add(new FlxCamera());
-		ui = new UI();
+		ui = new UI(player);
 		ui.cameras = [uiCamera];
 
 		add(starField);
@@ -68,7 +68,7 @@ class PlayState extends FlxState {
 			skipIntro();
 		}
 
-		FlxG.camera.setFilters([new ShaderFilter(new CameraShader())]);
+		// FlxG.camera.setFilters([new ShaderFilter(new CameraShader())]);
 	}
 
 	override public function update(elapsed:Float) {
@@ -80,7 +80,7 @@ class PlayState extends FlxState {
 
 		cursor.x = FlxG.mouse.x - cursor.frameWidth / 2;
 		cursor.y = FlxG.mouse.y - cursor.frameHeight / 2 + 10;
-		cursor.alpha = player.canRoll ? 1 : 0.2;
+		cursor.color = if (player.charge < 1) FlxColor.WHITE else FlxColor.RED;
 
 		if (FlxG.keys.justPressed.R) {
 			FlxG.resetState();

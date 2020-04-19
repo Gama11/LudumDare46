@@ -1,7 +1,6 @@
 boss
 2 more basic enemy types
 cap ship speed
-reload roll bar
 title screen
 "wave types seen"?
 "bullet storm" at y direction

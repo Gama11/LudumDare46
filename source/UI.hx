@@ -1,5 +1,6 @@
 import flixel.addons.effects.chainable.FlxEffectSprite;
 import flixel.addons.effects.chainable.FlxGlitchEffect;
+import flixel.ui.FlxBar;
 
 class UI extends FlxSpriteGroup {
 	static final ScaleIncreasePercentage = 0.5;
@@ -11,9 +12,10 @@ class UI extends FlxSpriteGroup {
 
 	var effectSprite:FlxEffectSprite;
 	var instructions:FlxText;
+	var rechargeBar:FlxBar;
 	var thumps:Array<{function cancel():Void;}> = [];
 
-	public function new() {
+	public function new(player) {
 		super();
 
 		heart = new FlxSprite(10, 10, AssetPaths.heart__png);
@@ -58,6 +60,12 @@ class UI extends FlxSpriteGroup {
 		scoreText.fieldWidth = FlxG.width;
 		scoreText.alignment = CENTER;
 		add(scoreText);
+
+		var offsetY = 0;
+		var width = 10;
+		rechargeBar = new FlxBar(FlxG.width - width, offsetY, BOTTOM_TO_TOP, width, FlxG.height - offsetY, player, "charge", 0, 1);
+		rechargeBar.createFilledBar(FlxColor.GRAY, FlxColor.WHITE);
+		add(rechargeBar);
 
 		for (member in this) {
 			member.scrollFactor.set();
@@ -108,6 +116,7 @@ class UI extends FlxSpriteGroup {
 		accelerate(healthCounter);
 
 		heart.visible = false;
+		rechargeBar.visible = false;
 
 		for (thump in thumps) {
 			thump.cancel();
@@ -161,5 +170,7 @@ class UI extends FlxSpriteGroup {
 			scale -= 0.1;
 			scoreText.scale.set(scale, scale);
 		}
+
+		rechargeBar.color = if (rechargeBar.percent == 100) FlxColor.RED else FlxColor.WHITE;
 	}
 }
