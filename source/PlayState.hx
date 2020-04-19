@@ -24,6 +24,7 @@ class PlayState extends FlxState {
 		FlxG.sound.music.volume = 0;
 		FlxG.sound.music.fadeIn(3);
 		FlxG.sound.defaultSoundGroup.volume = 0.3;
+		FlxG.timeScale = 1;
 
 		bgColor = 0x222222;
 		FlxG.camera.zoom = 0.1;
