@@ -6,6 +6,7 @@ class PlayState extends FlxState {
 	public static var FirstWaveBeaten = false;
 	public static final IntroDuration = 3;
 	public static var Difficulty(default, null):Float;
+	public static var rainbowColor:FlxColor = FlxColor.WHITE;
 
 	var player:Player;
 	var bullets:Bullets;
@@ -218,6 +219,8 @@ class PlayState extends FlxState {
 				}
 			}
 		}
+
+		rainbowColor = FlxG.random.color();
 	}
 
 	function onBulletHit(bullet:Bullet, object:ITeam) {

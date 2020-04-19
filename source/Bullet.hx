@@ -66,7 +66,7 @@ class Bullet extends FlxSprite implements ITeam {
 		}
 
 		if (rainbow) {
-			color = FlxG.random.color();
+			color = PlayState.rainbowColor;
 		}
 
 		super.update(elapsed);

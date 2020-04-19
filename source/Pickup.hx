@@ -47,6 +47,6 @@ class Pickup extends FlxSprite {
 		if (y > FlxG.height + 20) {
 			exists = false;
 		}
-		color = FlxG.random.color();
+		color = PlayState.rainbowColor;
 	}
 }
