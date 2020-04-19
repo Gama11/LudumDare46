@@ -154,18 +154,17 @@ class Player extends FlxSprite implements ITeam {
 		var gibs = new FlxEmitter();
 		gibs.alpha.start.set(1);
 		gibs.alpha.end.set(0);
-		gibs.scale.start.set(new FlxPoint(0.4, 0.4), new FlxPoint(1.5, 1.5));
+		gibs.scale.start.set(new FlxPoint(1.5, 1.5), new FlxPoint(2.5, 2.5));
 		gibs.scale.end.set(new FlxPoint(0.1, 0.1), new FlxPoint(0.2, 0.2));
-		gibs.velocity.set(0, 0, 20, 20, 0, 0, 20, 20);
+		gibs.velocity.set(0, 0, 10, 10, 0, 0, 10, 10);
 		gibs.lifespan.set(20);
 		gibs.angle.set(0, 360, 0, 360);
 		gibs.x = x;
 		gibs.y = y;
-		for (i in 0...100) {
+		for (i in 0...40) {
 			var gib = new FlxParticle();
 			gib.loadGraphic("assets/images/ship.png", true, 4, 4);
 			gib.animation.frameIndex = i % gib.animation.frames;
-			gib.scale.scale(16);
 			gibs.add(gib);
 		}
 		gibs.start();
