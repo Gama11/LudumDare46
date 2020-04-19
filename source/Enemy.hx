@@ -41,6 +41,7 @@ class Enemy extends FlxSprite implements ITeam {
 		killAnimation = false;
 		fireTimer.cancel();
 		color = FlxColor.WHITE;
+		scale.set(1, 1);
 
 		switch type {
 			case Basic(xDir):

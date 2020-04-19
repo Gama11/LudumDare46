@@ -27,7 +27,7 @@ class Enemies extends FlxTypedGroup<Enemy> {
 	}
 
 	public function startSpawning() {
-		setWaveType(Enemies);
+		setWaveType(Boss);
 	}
 
 	function spawnWave() {

@@ -30,6 +30,7 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	<assets path="assets" />
+	<template path="assets/data/index.html" rename="index.html" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 

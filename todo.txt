@@ -2,3 +2,5 @@
 cap ship speed
 "wave types seen"?
 "bullet storm" at y direction
+boss warning
+fix html5 performance
