@@ -86,9 +86,6 @@ class Enemy extends FlxSprite implements ITeam {
 				makeGraphic(BossSize, BossSize, FlxColor.TRANSPARENT);
 				FlxSpriteUtil.drawCircle(this);
 				color = FlxColor.MAGENTA;
-				healthBar = new FlxBar(0, 0, LEFT_TO_RIGHT, 200, 20, this, "health", 0, maxHealth);
-				healthBar.createFilledBar(FlxColor.BLACK, color, true, FlxColor.BLACK);
-				healthBar.screenCenter(X);
 				width *= 0.7;
 				height *= 0.7;
 				centerOffsets();
@@ -98,6 +95,12 @@ class Enemy extends FlxSprite implements ITeam {
 
 		health *= PlayState.Difficulty;
 		maxHealth *= PlayState.Difficulty;
+
+		if (type == Boss) {
+			healthBar = new FlxBar(0, 0, LEFT_TO_RIGHT, 200, 20, this, "health", 0, maxHealth);
+			healthBar.createFilledBar(FlxColor.BLACK, color, true, FlxColor.BLACK);
+			healthBar.screenCenter(X);
+		}
 	}
 
 	var lockY:Null<Float> = null;
