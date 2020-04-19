@@ -39,19 +39,33 @@ class Enemies extends FlxTypedGroup<Enemy> {
 			case Enemies:
 				var blueTolerance = 1;
 				var blueAmount = 1;
+				var num = 4;
+
 				if (PlayState.Difficulty > 1.3) {
 					blueTolerance = 2;
+				}
+				if (PlayState.Difficulty > 1.6) {
+					num = 6;
 				}
 				if (PlayState.Difficulty > 1.8) {
 					blueAmount = 2;
 				}
+				if (PlayState.Difficulty > 2.1) {
+					num = 8;
+				}
 
 				if (FlxG.random.bool(75) || bluesSpawned > blueTolerance) {
-					var xOffset = if (dir == -1) 300 else -100;
-					for (i in 0...5) {
-						spawn(10 + i * 100 + xOffset, -100 - i * 10, Basic(dir));
+					if (FlxG.random.bool()) {
+						var xOffset = if (dir == -1) 300 else -100;
+						for (i in 0...5) {
+							spawn(10 + i * 100 + xOffset, -100 - i * 10, Basic(dir));
+						}
+						dir *= -1;
+					} else {
+						for (i in 0...num) {
+							spawn(FlxG.width / num * i + 10, -20 + i * 10, Basic3);
+						}
 					}
-					dir *= -1;
 				} else {
 					bluesSpawned++;
 					spawn(100, -100, Basic2);

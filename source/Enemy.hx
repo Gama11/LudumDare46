@@ -3,6 +3,7 @@ import flixel.ui.FlxBar;
 enum EnemyType {
 	Basic(xDir:Int);
 	Basic2;
+	Basic3;
 	Boss;
 }
 
@@ -52,7 +53,7 @@ class Enemy extends FlxSprite implements ITeam {
 			case Basic(xDir):
 				velocity.y = 150;
 				velocity.x = 50 * xDir;
-				score = 1;
+				score = 2;
 				loadGraphic("assets/images/invader1.png");
 				health = maxHealth = 4;
 				scale.set(2, 2);
@@ -65,9 +66,17 @@ class Enemy extends FlxSprite implements ITeam {
 				loadGraphic("assets/images/invader2.png");
 				scale.set(2, 2);
 				health = maxHealth = 6;
-				scale.set(2, 2);
 				color = FlxColor.BLUE;
 				fireTimer.start(0.03, _ -> circularShot(), 0);
+
+			case Basic3:
+				velocity.y = 250;
+				score = 1;
+				loadGraphic("assets/images/invader3.png");
+				health = maxHealth = 3;
+				scale.set(2, 2);
+				color = FlxColor.ORANGE;
+				fireTimer.start(0.3, _ -> straightShot(), 0);
 
 			case Boss:
 				velocity.y = 150;
@@ -158,6 +167,13 @@ class Enemy extends FlxSprite implements ITeam {
 		var shotAngle = FlxAngle.wrapAngle(lastShotAngle + 5);
 		bullets.spawn(x + 20, y + 10, Enemy, color, shotAngle, Normal, 150, false);
 		lastShotAngle = shotAngle;
+	}
+
+	function straightShot() {
+		if (!active) {
+			return;
+		}
+		bullets.spawn(x + frameWidth / 2 - 2, y + frameHeight - 5, Enemy, color, 180, Wiggle, 150, false);
 	}
 
 	function beam() {

@@ -20,6 +20,7 @@ class Bullet extends FlxSprite implements ITeam {
 	var wiggleTween:FlxTween;
 	var rainbowTween:FlxTween;
 	var rainbow:Bool;
+	var lifetime = 0.0;
 
 	public function new() {
 		super();
@@ -29,7 +30,11 @@ class Bullet extends FlxSprite implements ITeam {
 	public function init(x, y, team, color, angle:Float, type, speed, rainbow) {
 		reset(x, y);
 
+		angularVelocity = 0;
+		angularAcceleration = 0;
 		angle -= 90;
+		lifetime = 0;
+		alpha = 1;
 		this.team = team;
 		this.color = color;
 		this.angle = angle;
@@ -43,15 +48,20 @@ class Bullet extends FlxSprite implements ITeam {
 		scaleTween = FlxTween.tween(scale, {x: 1, y: 1}, 0.1, {ease: FlxEase.cubeIn});
 
 		if (type == Wiggle) {
+			angularAcceleration = FlxG.random.int(20, 30) * FlxG.random.sign();
+		}
+		/* if (type == Wiggle) {
 			velocity.x = -WiggleStrength;
 			wiggleTween = FlxTween.tween(velocity, {x: WiggleStrength}, 0.1, {type: PINGPONG});
-		}
+		}*/
 		/* if (rainbow) {
 			rainbowTween = FlxTween.color(this, 3, FlxColor.WHITE, FlxColor.BLACK, {type: PINGPONG});
 		}*/
 	}
 
 	override function update(elapsed:Float) {
+		lifetime += elapsed;
+
 		if (y > FlxG.height + 20 || y < -20) {
 			exists = false;
 		}
@@ -67,6 +77,20 @@ class Bullet extends FlxSprite implements ITeam {
 
 		if (rainbow) {
 			color = PlayState.rainbowColor;
+		}
+
+		if (type == Wiggle) {
+			if (lifetime < 5) {
+				var vec:FlxVector = velocity;
+				velocity.copyFrom(FlxVelocity.velocityFromAngle(angle, vec.length));
+			} else {
+				angularAcceleration = 0;
+				angularVelocity = 0;
+				alpha -= elapsed / 2;
+				if (alpha < 0.5) {
+					kill();
+				}
+			}
 		}
 
 		super.update(elapsed);
