@@ -42,6 +42,7 @@ class Enemy extends FlxSprite implements ITeam {
 		fireTimer.cancel();
 		color = FlxColor.WHITE;
 		scale.set(1, 1);
+		antialiasing = false;
 
 		switch type {
 			case Basic(xDir):
@@ -57,7 +58,7 @@ class Enemy extends FlxSprite implements ITeam {
 			case Boss:
 				velocity.y = 150;
 				score = 25;
-				health = maxHealth = 300;
+				health = maxHealth = 150;
 				makeGraphic(BossSize, BossSize, FlxColor.TRANSPARENT);
 				FlxSpriteUtil.drawCircle(this);
 				color = FlxColor.MAGENTA;
@@ -68,6 +69,7 @@ class Enemy extends FlxSprite implements ITeam {
 				height *= 0.7;
 				centerOffsets();
 				screenCenter(X);
+				antialiasing = true;
 		}
 	}
 
@@ -145,12 +147,20 @@ class Enemy extends FlxSprite implements ITeam {
 			beam.screenCenter();
 			beam.angle += 45;
 			beam.solid = false;
+			beam.antialiasing = true;
 			FlxTween.tween(beam, {angularVelocity: 40}, 3, {ease: FlxEase.expoIn});
 			beams.add(beam);
 			return beam;
 		}
 		makeBeam();
 		makeBeam().angle += 90;
+
+		fireTimer.start(5, function(_) {
+			for (beam in beams) {
+				FlxTween.tween(beam, {angularVelocity: -beam.angularVelocity}, 2);
+			}
+			FlxG.sound.play("assets/sounds/reverse.wav");
+		}, 0);
 	}
 
 	override function kill() {
