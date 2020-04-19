@@ -80,17 +80,49 @@ class PlayState extends FlxState {
 		FlxG.overlap(bullets, enemies, onBulletHit);
 		FlxG.overlap(bullets, player, onBulletHit);
 		FlxG.overlap(pickups, player, onCollectPickup);
-		if (enemies.boss != null && enemies.boss.alive) {
-			var beams = enemies.boss.beams;
-			if (beams != null) {
-				for (beam in beams) {
-					if (beam.alpha == 1 && FlxG.pixelPerfectOverlap(beam, player)) {
-						player.hurt(1);
+
+		var boss = enemies.boss;
+		if (boss != null && boss.alive) {
+			var beams = boss.beams;
+			/* if (beams != null) {
+					for (beam in beams) {
+						if (beam.alpha == 1 && FlxG.pixelPerfectOverlap(beam, player)) {
+							player.hurt(1);
+						}
 					}
 				}
-			}
-			if (FlxG.pixelPerfectOverlap(enemies.boss, player)) {
+				if (FlxG.pixelPerfectOverlap(boss, player)) {
+					player.hurt(1);
+			}*/
+
+			if (FlxG.overlap(boss, player)) {
 				player.hurt(1);
+			}
+
+			if (beams != null) {
+				var screenCenter = new FlxPoint(FlxG.width, FlxG.height).scale(0.5);
+				for (beam in beams) {
+					if (!beam.solid) {
+						continue;
+					}
+
+					var offset = 0;
+					var a1 = FlxAngle.wrapAngle(beam.angle) + offset;
+					var a2 = FlxAngle.wrapAngle(beam.angle + 180) + offset;
+
+					var playerBoss = FlxAngle.wrapAngle(FlxAngle.angleBetweenPoint(player, screenCenter, true));
+					var d1 = Std.int(Math.abs(playerBoss - a1));
+					var d2 = Std.int(Math.abs(playerBoss - a2));
+					var minDelta = Std.int(Math.min(d1, d2));
+
+					// FlxG.watch.addQuick("playerBoss", playerBoss);
+					// FlxG.watch.addQuick(beams.members.indexOf(beam) + "", '$d1, $d2');
+
+					if (minDelta < 5) {
+						player.hurt(1);
+						break;
+					}
+				}
 			}
 		}
 
@@ -119,6 +151,9 @@ class PlayState extends FlxState {
 		}
 		if (FlxG.keys.justPressed.H) {
 			FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
+		}
+		if (FlxG.keys.justPressed.S) {
+			FlxG.timeScale = if (FlxG.timeScale == 1) 0.1 else 1;
 		}
 		#end
 

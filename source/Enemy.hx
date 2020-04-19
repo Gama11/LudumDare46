@@ -131,23 +131,26 @@ class Enemy extends FlxSprite implements ITeam {
 		FlxG.sound.play("assets/sounds/charge_beam.wav", () -> {
 			for (beam in beams) {
 				beam.alpha = 1;
+				beam.solid = true;
 			}
 		});
 		beams = new FlxTypedGroup<FlxSprite>();
 
-		var beamWidth = 10;
-		function makeBeam(width, height) {
+		var beamWidth = 20;
+		function makeBeam() {
 			var beam = new FlxSprite();
-			beam.makeGraphic(width, height, FlxColor.MAGENTA);
+			var margin = 400;
+			beam.makeGraphic(beamWidth, FlxG.width + margin, FlxColor.MAGENTA);
 			beam.alpha = 0.2;
 			beam.screenCenter();
 			beam.angle += 45;
+			beam.solid = false;
 			FlxTween.tween(beam, {angularVelocity: 40}, 3, {ease: FlxEase.expoIn});
 			beams.add(beam);
+			return beam;
 		}
-		var margin = 400;
-		makeBeam(FlxG.height + margin, beamWidth);
-		makeBeam(beamWidth, FlxG.width + margin);
+		makeBeam();
+		makeBeam().angle += 90;
 	}
 
 	override function kill() {

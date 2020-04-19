@@ -1,4 +1,5 @@
 class Enemies extends FlxTypedGroup<Enemy> {
+	static final WaveToDebug = Boss;
 	static final TimeBetweenWaves = 2;
 
 	public var boss(default, null):Enemy;
@@ -27,7 +28,7 @@ class Enemies extends FlxTypedGroup<Enemy> {
 	}
 
 	public function startSpawning() {
-		setWaveType(Boss);
+		setWaveType(#if debug WaveToDebug #else Enemies #end);
 	}
 
 	function spawnWave() {
