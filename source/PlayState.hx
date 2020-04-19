@@ -1,3 +1,4 @@
+import Pickup.PickupType;
 import flixel.addons.display.FlxStarField.FlxStarField2D;
 import openfl.filters.ShaderFilter;
 
@@ -173,9 +174,10 @@ class PlayState extends FlxState {
 
 			if (FlxG.random.bool(pickupChance)) {
 				pickupChance = 0;
-				pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10);
+				var type = FlxG.random.getObject(PickupType.createAll());
+				pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10, type);
 			} else {
-				pickupChance += 0.002;
+				pickupChance += 0.001;
 			}
 
 			for (bullet in bullets) {
@@ -215,9 +217,19 @@ class PlayState extends FlxState {
 	}
 
 	function onCollectPickup(pickup:Pickup, player:Player) {
-		increaseScore(pickup.score);
+		switch pickup.type {
+			case Score:
+				increaseScore(pickup.score);
+				FlxG.sound.play("assets/sounds/coin.wav");
+
+			case Bomb:
+				for (bullet in bullets) {
+					bullet.kill();
+				}
+				FlxG.camera.shake();
+				FlxG.sound.play("assets/sounds/bomb.wav");
+		}
 		pickup.kill();
-		FlxG.sound.play("assets/sounds/coin.wav");
 	}
 
 	function skipIntro() {
