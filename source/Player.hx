@@ -18,7 +18,6 @@ class SmokeParticle extends FlxParticle {
 }
 
 class Player extends FlxSprite implements ITeam {
-	static final Sound = 1;
 	static final LerpFactor = 0.02;
 	static final FireRate = 0.2;
 	static final BulletOffsetX = 5;
@@ -117,7 +116,7 @@ class Player extends FlxSprite implements ITeam {
 		fire(x + BulletOffsetX, y + BulletOffsetY);
 		fire(x + frameWidth - BulletOffsetX, y + BulletOffsetY);
 
-		FlxG.sound.play('assets/sounds/pew$Sound.wav', 0.1);
+		FlxG.sound.play('assets/sounds/pew.wav', 0.3);
 		y += Kickback;
 	}
 
