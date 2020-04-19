@@ -20,6 +20,9 @@ class PlayState extends FlxState {
 	var gameEnded = false;
 
 	override public function create() {
+		if (FlxG.sound.music == null) { // we came from the menu
+			FlxG.camera.zoom = 0.1;
+		}
 		FlxCamera.defaultCameras = [FlxG.camera];
 		FlxG.sound.playMusic("assets/music/music.wav");
 		FlxG.sound.music.volume = 0;
@@ -28,7 +31,6 @@ class PlayState extends FlxState {
 		FlxG.timeScale = 1;
 
 		bgColor = 0x222222;
-		FlxG.camera.zoom = 0.1;
 
 		var starField = new FlxStarField2D();
 		starField.starVelocityOffset.set(0, 1);
@@ -39,6 +41,8 @@ class PlayState extends FlxState {
 
 		player = new Player(bullets);
 		player.screenCenter();
+		player.active = false;
+		player.y = FlxG.height + 200;
 
 		cursor = new FlxSprite("assets/images/target2.png");
 
@@ -291,8 +295,13 @@ class PlayState extends FlxState {
 
 	function startGame() {
 		gameStarted = true;
-		player.startFiring();
-		enemies.startSpawning();
+		player.active = true;
+		player.dodgeRoll();
+
+		new FlxTimer().start(Player.RollDuration, function(_) {
+			player.startFiring();
+			enemies.startSpawning();
+		});
 	}
 
 	function increaseScore(amount:Int) {

@@ -18,11 +18,12 @@ class SmokeParticle extends FlxParticle {
 }
 
 class Player extends FlxSprite implements ITeam {
+	public static final RollDuration = 0.5;
+
 	static final LerpFactor = 0.015;
 	static final FireRate = 0.2;
 	static final BulletOffsetX = 5;
 	static final BulletOffsetY = 10;
-	static final RollDuration = 0.5;
 	static final RollCooldown = 1;
 	static final Kickback = 6;
 
@@ -31,9 +32,10 @@ class Player extends FlxSprite implements ITeam {
 	public var exhaust2(default, null):FlxTypedEmitter<SmokeParticle>;
 	public var charge(default, null):Float = 1;
 
+	public var firing(default, null) = false;
+	public var rolling(default, null) = false;
+
 	final bullets:Bullets;
-	var firing = false;
-	var rolling = false;
 	final fireTimer = new FlxTimer();
 
 	public function new(bullets) {
@@ -64,32 +66,36 @@ class Player extends FlxSprite implements ITeam {
 		return charge >= 1;
 	}
 
+	public function dodgeRoll() {
+		if (!rolling && isCharged()) {
+			rolling = true;
+			solid = false;
+			charge = 0;
+			setColorTransform(1, 0, 0, 255, 0, 0);
+			FlxG.sound.play("assets/sounds/jump.wav");
+			FlxTween.tween(this, {
+				"scale.x": -1,
+				"scale.y": 1.2,
+				x: FlxG.mouse.x - frameWidth / 2,
+				y: FlxG.mouse.y - frameHeight / 2
+			}, RollDuration, {
+				type: PINGPONG,
+				onComplete: function(tween) {
+					tween.cancel();
+					scale.set(1, 1);
+					rolling = false;
+					solid = true;
+					setColorTransform();
+				}
+			});
+		} else {
+			FlxG.sound.play("assets/sounds/blocked.wav");
+		}
+	}
+
 	override function update(elapsed:Float) {
 		if (FlxG.mouse.justPressed) {
-			if (!rolling && isCharged()) {
-				rolling = true;
-				solid = false;
-				charge = 0;
-				setColorTransform(1, 0, 0, 255, 0, 0);
-				FlxG.sound.play("assets/sounds/jump.wav");
-				FlxTween.tween(this, {
-					"scale.x": -1,
-					"scale.y": 1.2,
-					x: FlxG.mouse.x - frameWidth / 2,
-					y: FlxG.mouse.y - frameHeight / 2
-				}, RollDuration, {
-					type: PINGPONG,
-					onComplete: function(tween) {
-						tween.cancel();
-						scale.set(1, 1);
-						rolling = false;
-						solid = true;
-						setColorTransform();
-					}
-				});
-			} else {
-				FlxG.sound.play("assets/sounds/blocked.wav");
-			}
+			dodgeRoll();
 		}
 
 		if (!FlxG.keys.pressed.SPACE && !FlxG.mouse.pressedRight && !rolling) {
