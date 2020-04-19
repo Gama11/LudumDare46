@@ -71,7 +71,7 @@ class Enemies extends FlxTypedGroup<Enemy> {
 				var i = 0;
 				while (margin * i < FlxG.width) {
 					if (holeWavesLeft <= 0 || i < holeOffset || i > holeOffset + holeWidth) {
-						bullets.spawn(margin * i, -10, Enemy, FlxColor.CYAN, 180, Normal, 200);
+						bullets.spawn(margin * i, -10, Enemy, FlxColor.CYAN, 180, Normal, 200, false);
 					}
 					i++;
 				}

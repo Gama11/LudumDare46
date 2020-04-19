@@ -171,6 +171,9 @@ class PlayState extends FlxState {
 		if (FlxG.keys.justPressed.U) {
 			increaseLevel();
 		}
+		if (FlxG.keys.justPressed.FOUR) {
+			onCollectPickup(new Pickup().init(0, 0, DoubleShot), player);
+		}
 		#end
 
 		if (gameStarted) {
@@ -187,12 +190,14 @@ class PlayState extends FlxState {
 				FlxG.save.data.deaths = deaths + 1;
 			}
 
-			if (FlxG.random.bool(pickupChance)) {
-				pickupChance = 0;
-				var type = FlxG.random.getObject(PickupType.createAll());
-				pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10, type);
-			} else {
-				pickupChance += 0.001 * elapsed * 60;
+			if (Difficulty >= 1.1) {
+				if (FlxG.random.bool(pickupChance)) {
+					pickupChance = 0;
+					var type = FlxG.random.getObject(PickupType.createAll());
+					pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10, type);
+				} else {
+					pickupChance += 0.001 * elapsed * 60;
+				}
 			}
 
 			for (bullet in bullets) {
@@ -200,7 +205,7 @@ class PlayState extends FlxState {
 					var minDistance = Math.POSITIVE_INFINITY;
 					var target = null;
 					for (enemy in enemies) {
-						if (!enemy.exists || enemy.y < 0) {
+						if (!enemy.exists || !enemy.alive || enemy.killAnimation || enemy.y < 0) {
 							continue;
 						}
 						var distance = FlxMath.distanceBetween(enemy, bullet);
@@ -250,9 +255,9 @@ class PlayState extends FlxState {
 
 		switch pickup.type {
 			case Score:
+				FlxG.sound.play("assets/sounds/coin.wav");
 				tween(FlxG.width - 80, function() {
 					increaseScore(pickup.score);
-					FlxG.sound.play("assets/sounds/coin.wav");
 				});
 
 			case Bomb:
@@ -286,6 +291,11 @@ class PlayState extends FlxState {
 					});
 					slowDownFadeTween = FlxTween.tween(ui.slowdownIcon, {alpha: 0}, duration + fadeOut);
 				});
+
+			case DoubleShot:
+				FlxG.sound.play("assets/sounds/powerup.wav");
+				player.startDoubleShot();
+				pickup.kill();
 		}
 	}
 

@@ -37,6 +37,8 @@ class Player extends FlxSprite implements ITeam {
 
 	final bullets:Bullets;
 	final fireTimer = new FlxTimer();
+	final doubleShotTimer = new FlxTimer();
+	var doubleShot = false;
 
 	public function new(bullets) {
 		super(AssetPaths.ship__png);
@@ -127,8 +129,14 @@ class Player extends FlxSprite implements ITeam {
 			return;
 		}
 		var fire = bullets.spawn.bind(_, _, Player, FlxColor.YELLOW, 0, Homing, 700);
-		fire(x + BulletOffsetX, y + BulletOffsetY);
-		fire(x + frameWidth - BulletOffsetX, y + BulletOffsetY);
+		fire(x + BulletOffsetX, y + BulletOffsetY, doubleShot);
+		fire(x + frameWidth - BulletOffsetX, y + BulletOffsetY, doubleShot);
+
+		if (doubleShot) {
+			var offset = -20;
+			fire(x - offset, y + BulletOffsetY, doubleShot);
+			fire(x + frameWidth + offset, y + BulletOffsetY, doubleShot);
+		}
 
 		FlxG.sound.play('assets/sounds/pew.wav', 0.7);
 		y += Kickback;
@@ -192,5 +200,13 @@ class Player extends FlxSprite implements ITeam {
 			return;
 		}
 		super.hurt(damage);
+	}
+
+	public function startDoubleShot() {
+		doubleShotTimer.cancel();
+		doubleShot = true;
+		doubleShotTimer.start(4, _ -> {
+			doubleShot = false;
+		});
 	}
 }

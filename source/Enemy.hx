@@ -12,6 +12,7 @@ class Enemy extends FlxSprite implements ITeam {
 	public var team(default, null):Team = Enemy;
 	public var score(default, null):Int;
 	public var beams(default, null):FlxTypedGroup<FlxSprite>;
+	public var killAnimation(default, null) = false;
 
 	final fireTimer = new FlxTimer();
 	final bullets:Bullets;
@@ -19,7 +20,7 @@ class Enemy extends FlxSprite implements ITeam {
 	var waitUntilNextVolley:Int = 0;
 	var shot:Int = 0;
 	var maxHealth:Float;
-	var killAnimation = false;
+
 	var healthBar:FlxBar;
 
 	public function new(bullets) {
@@ -45,6 +46,7 @@ class Enemy extends FlxSprite implements ITeam {
 		antialiasing = false;
 		alpha = 1;
 		offset.set();
+		solid = true;
 
 		switch type {
 			case Basic(xDir):
@@ -135,7 +137,7 @@ class Enemy extends FlxSprite implements ITeam {
 		var y = y + frameHeight - 2;
 		var x = x + frameWidth / 2;
 
-		var fire = bullets.spawn.bind(x - Bullet.Width / 2, y, Enemy, FlxColor.GREEN, _, Normal, 300);
+		var fire = bullets.spawn.bind(x - Bullet.Width / 2, y, Enemy, FlxColor.GREEN, _, Normal, 300, false);
 		fire(angleOffset - deltaAngle);
 		fire(angleOffset);
 		fire(angleOffset + deltaAngle);
@@ -154,7 +156,7 @@ class Enemy extends FlxSprite implements ITeam {
 			return;
 		}
 		var shotAngle = FlxAngle.wrapAngle(lastShotAngle + 5);
-		bullets.spawn(x + 20, y + 10, Enemy, color, shotAngle, Normal, 150);
+		bullets.spawn(x + 20, y + 10, Enemy, color, shotAngle, Normal, 150, false);
 		lastShotAngle = shotAngle;
 	}
 
@@ -205,6 +207,7 @@ class Enemy extends FlxSprite implements ITeam {
 		}
 		killAnimation = true;
 		alive = false;
+		solid = false;
 		beams = null;
 		healthBar = null;
 		fireTimer.cancel();

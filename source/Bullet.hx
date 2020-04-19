@@ -18,13 +18,15 @@ class Bullet extends FlxSprite implements ITeam {
 
 	var scaleTween:FlxTween;
 	var wiggleTween:FlxTween;
+	var rainbowTween:FlxTween;
+	var rainbow:Bool;
 
 	public function new() {
 		super();
 		makeGraphic(8, Width);
 	}
 
-	public function init(x, y, team, color, angle:Float, type, speed) {
+	public function init(x, y, team, color, angle:Float, type, speed, rainbow) {
 		reset(x, y);
 
 		angle -= 90;
@@ -32,22 +34,21 @@ class Bullet extends FlxSprite implements ITeam {
 		this.color = color;
 		this.angle = angle;
 		this.type = type;
+		this.rainbow = rainbow;
+		color = FlxColor.WHITE;
 
 		velocity.copyFrom(FlxVelocity.velocityFromAngle(angle, speed));
 
 		scale.set(0.1, 0.1);
-		if (scaleTween != null) {
-			scaleTween.cancel();
-		}
 		scaleTween = FlxTween.tween(scale, {x: 1, y: 1}, 0.1, {ease: FlxEase.cubeIn});
 
-		if (wiggleTween != null) {
-			wiggleTween.cancel();
-		}
 		if (type == Wiggle) {
 			velocity.x = -WiggleStrength;
 			wiggleTween = FlxTween.tween(velocity, {x: WiggleStrength}, 0.1, {type: PINGPONG});
 		}
+		/* if (rainbow) {
+			rainbowTween = FlxTween.color(this, 3, FlxColor.WHITE, FlxColor.BLACK, {type: PINGPONG});
+		}*/
 	}
 
 	override function update(elapsed:Float) {
@@ -64,6 +65,24 @@ class Bullet extends FlxSprite implements ITeam {
 			}
 		}
 
+		if (rainbow) {
+			color = FlxG.random.color();
+		}
+
 		super.update(elapsed);
+	}
+
+	override function kill() {
+		super.kill();
+
+		if (rainbowTween != null) {
+			rainbowTween.cancel();
+		}
+		if (wiggleTween != null) {
+			wiggleTween.cancel();
+		}
+		if (scaleTween != null) {
+			scaleTween.cancel();
+		}
 	}
 }
