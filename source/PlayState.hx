@@ -95,6 +95,9 @@ class PlayState extends FlxState {
 		if (FlxG.keys.justPressed.I) {
 			player.health = 99999;
 		}
+		if (FlxG.keys.justPressed.T) {
+			FlxG.camera.filtersEnabled = !FlxG.camera.filtersEnabled;
+		}
 		#end
 
 		if (gameStarted) {
@@ -141,9 +144,11 @@ class PlayState extends FlxState {
 	function onBulletHit(bullet:Bullet, object:ITeam) {
 		if (bullet.team != object.team) {
 			var object:FlxSprite = cast object;
+			var wasAlive = object.alive;
+
 			object.hurt(bullet.damage);
 
-			if (bullet.team == Player && !object.alive && !gameEnded) {
+			if (bullet.team == Player && wasAlive && !object.alive && !gameEnded) {
 				var enemy:Enemy = cast object;
 				increaseScore(enemy.score);
 			}

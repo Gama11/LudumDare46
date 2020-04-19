@@ -81,6 +81,7 @@ class Enemy extends FlxSprite implements ITeam {
 			return;
 		}
 		killAnimation = true;
+		alive = false;
 		fireTimer.cancel();
 		FlxG.sound.play("assets/sounds/explode_enemy.wav");
 		FlxG.camera.shake(0.005, 0.2);
