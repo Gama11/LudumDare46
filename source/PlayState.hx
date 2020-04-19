@@ -56,7 +56,6 @@ class PlayState extends FlxState {
 		FlxG.mouse.visible = false;
 
 		// FlxG.debugger.visible = true;
-		// FlxG.debugger.drawDebug = true;
 		FlxG.console.registerClass(Player);
 
 		FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.expoIn});
@@ -81,6 +80,19 @@ class PlayState extends FlxState {
 		FlxG.overlap(bullets, enemies, onBulletHit);
 		FlxG.overlap(bullets, player, onBulletHit);
 		FlxG.overlap(pickups, player, onCollectPickup);
+		if (enemies.boss != null && enemies.boss.alive) {
+			var beams = enemies.boss.beams;
+			if (beams != null) {
+				for (beam in beams) {
+					if (beam.alpha == 1 && FlxG.pixelPerfectOverlap(beam, player)) {
+						player.hurt(1);
+					}
+				}
+			}
+			if (FlxG.pixelPerfectOverlap(enemies.boss, player)) {
+				player.hurt(1);
+			}
+		}
 
 		cursor.x = FlxG.mouse.x - cursor.frameWidth / 2;
 		cursor.y = FlxG.mouse.y - cursor.frameHeight / 2 + 10;
@@ -105,6 +117,9 @@ class PlayState extends FlxState {
 		if (FlxG.keys.justPressed.ESCAPE) {
 			FlxG.switchState(new MenuState());
 		}
+		if (FlxG.keys.justPressed.H) {
+			FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
+		}
 		#end
 
 		if (gameStarted) {
@@ -125,7 +140,7 @@ class PlayState extends FlxState {
 				pickupChance = 0;
 				pickups.recycle(Pickup, Pickup.new).init(FlxG.random.int(0, FlxG.width - 10), -10);
 			} else {
-				pickupChance += 0.01;
+				pickupChance += 0.002;
 			}
 
 			for (bullet in bullets) {
@@ -159,6 +174,8 @@ class PlayState extends FlxState {
 				var enemy:Enemy = cast object;
 				increaseScore(enemy.score);
 			}
+
+			bullet.kill();
 		}
 	}
 

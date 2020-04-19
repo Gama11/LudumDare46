@@ -1,6 +1,8 @@
 class Enemies extends FlxTypedGroup<Enemy> {
 	static final TimeBetweenWaves = 2;
 
+	public var boss(default, null):Enemy;
+
 	final bullets:Bullets;
 	var dir = -1;
 	var wavesSpawned = 0;
@@ -19,11 +21,13 @@ class Enemies extends FlxTypedGroup<Enemy> {
 	}
 
 	public function spawn(x, y, type) {
-		return recycle(Enemy, Enemy.new.bind(bullets)).init(x, y, type);
+		var enemy = recycle(Enemy, Enemy.new.bind(bullets));
+		enemy.init(x, y, type);
+		return enemy;
 	}
 
 	public function startSpawning() {
-		setWaveType(BulletWall);
+		setWaveType(Enemies);
 	}
 
 	function spawnWave() {
@@ -51,14 +55,19 @@ class Enemies extends FlxTypedGroup<Enemy> {
 					i++;
 				}
 				holeWavesLeft--;
+
+			case Boss:
+				if (boss != null) {
+					return;
+				}
+				boss = spawn(0, 0, Boss);
+				FlxG.sound.play("assets/sounds/boss_spawn.wav");
 		}
 
 		wavesSpawned++;
+
 		if (spawnTimer.elapsedLoops * spawnTimer.time > waveDuration) {
-			wavesSpawned = 0;
-			var choices = WaveType.createAll();
-			choices.remove(waveType);
-			setWaveType(FlxG.random.getObject(choices));
+			startNextWave();
 		}
 	}
 
@@ -69,14 +78,32 @@ class Enemies extends FlxTypedGroup<Enemy> {
 			spawnTimer.start(switch waveType {
 				case Enemies: 3;
 				case BulletWall: 0.3;
-			}, _ -> spawnWave(), 0);
+				case Boss: 1;
+			}, _ -> spawnWave(), if (waveType == Boss) 1 else 0);
 			PlayState.FirstWaveBeaten = true;
 		});
 		waveDuration = FlxG.random.int(5, 10);
+	}
+
+	override function update(elapsed:Float) {
+		super.update(elapsed);
+
+		if (boss != null && !boss.alive) {
+			startNextWave();
+		}
+	}
+
+	function startNextWave() {
+		wavesSpawned = 0;
+		boss = null;
+		var choices = WaveType.createAll();
+		choices.remove(waveType);
+		setWaveType(FlxG.random.getObject(choices));
 	}
 }
 
 enum WaveType {
 	Enemies;
 	BulletWall;
+	Boss;
 }

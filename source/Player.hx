@@ -138,6 +138,10 @@ class Player extends FlxSprite implements ITeam {
 		return;
 		#end
 
+		if (!alive) {
+			return;
+		}
+
 		super.kill();
 
 		exhaust1.kill();
@@ -173,5 +177,12 @@ class Player extends FlxSprite implements ITeam {
 		var almostBlack = FlxColor.BLACK;
 		almostBlack.alphaFloat = 0.9;
 		FlxG.camera.fade(almostBlack, 10);
+	}
+
+	override function hurt(damage:Float) {
+		if (!solid) {
+			return;
+		}
+		super.hurt(damage);
 	}
 }

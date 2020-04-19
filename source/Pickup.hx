@@ -10,7 +10,7 @@ class Pickup extends FlxSprite {
 	public function init(x, y) {
 		reset(x, y);
 		scale.set(1, 1);
-		velocity.y = FlxG.random.int(100, 500);
+		velocity.y = FlxG.random.int(200, 300);
 		solid = true;
 	}
 

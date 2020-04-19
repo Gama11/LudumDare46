@@ -1,4 +1,3 @@
-boss
 2 more basic enemy types
 cap ship speed
 "wave types seen"?
