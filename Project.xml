@@ -31,6 +31,7 @@
 	<classpath name="source" />
 	<assets path="assets" />
 	<template path="assets/data/index.html" rename="index.html" />
+	<template path="assets/images/favicon.ico" rename="favicon.ico" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 

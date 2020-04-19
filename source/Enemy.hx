@@ -44,6 +44,7 @@ class Enemy extends FlxSprite implements ITeam {
 		scale.set(1, 1);
 		antialiasing = false;
 		alpha = 1;
+		offset.set();
 
 		switch type {
 			case Basic(xDir):

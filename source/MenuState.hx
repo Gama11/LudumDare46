@@ -40,9 +40,9 @@ class MenuState extends FlxState {
 		super.update(elapsed);
 
 		if (FlxG.mouse.justPressed && !transitioning) {
-			FlxG.sound.play("assets/sounds/start.wav");
+			FlxG.sound.play("assets/sounds/start.wav", 0.3);
 			transitioning = true;
-			FlxG.camera.fade(FlxColor.BLACK, 5, () -> {
+			FlxG.camera.fade(FlxColor.BLACK, 3, () -> {
 				FlxG.switchState(new PlayState());
 			});
 			FlxTween.tween(FlxG.camera, {zoom: 0.01}, 3);

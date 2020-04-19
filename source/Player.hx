@@ -121,7 +121,7 @@ class Player extends FlxSprite implements ITeam {
 		fire(x + BulletOffsetX, y + BulletOffsetY);
 		fire(x + frameWidth - BulletOffsetX, y + BulletOffsetY);
 
-		FlxG.sound.play('assets/sounds/pew.wav');
+		FlxG.sound.play('assets/sounds/pew.wav', 0.7);
 		y += Kickback;
 	}
 
