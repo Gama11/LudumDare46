@@ -72,12 +72,15 @@ class Player extends FlxSprite implements ITeam {
 			solid = false;
 			charge = 0;
 			setColorTransform(1, 0, 0, 255, 0, 0);
-			FlxG.sound.play("assets/sounds/jump.wav");
+			var targetX = FlxG.mouse.x - frameWidth / 2;
+			var targetY = FlxG.mouse.y - frameHeight / 2;
+			var sound = FlxG.sound.play("assets/sounds/jump.wav");
+			sound.proximity(targetX, targetY, this, 1000);
 			FlxTween.tween(this, {
 				"scale.x": -1,
 				"scale.y": 1.2,
-				x: FlxG.mouse.x - frameWidth / 2,
-				y: FlxG.mouse.y - frameHeight / 2
+				x: targetX,
+				y: targetY
 			}, RollDuration, {
 				type: PINGPONG,
 				onComplete: function(tween) {
