@@ -316,7 +316,7 @@ class PlayState extends FlxState {
 	}
 
 	function increaseScore(amount:Int) {
-		score += amount;
+		score += Std.int(amount * Difficulty);
 		ui.updateScore(score);
 	}
 }
