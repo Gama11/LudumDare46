@@ -1,5 +1,5 @@
 class Enemies extends FlxTypedGroup<Enemy> {
-	static final WaveToDebug = Enemies;
+	static final WaveToDebug = Boss;
 	static final TimeBetweenWaves = 2;
 
 	public var boss(default, null):Enemy;

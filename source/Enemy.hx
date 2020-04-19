@@ -48,6 +48,7 @@ class Enemy extends FlxSprite implements ITeam {
 		alpha = 1;
 		offset.set();
 		solid = true;
+		lockY = null;
 
 		switch type {
 			case Basic(xDir):
@@ -99,6 +100,8 @@ class Enemy extends FlxSprite implements ITeam {
 		maxHealth *= PlayState.Difficulty;
 	}
 
+	var lockY:Null<Float> = null;
+
 	override function update(elapsed:Float) {
 		if (y > 1000) {
 			exists = false;
@@ -106,7 +109,12 @@ class Enemy extends FlxSprite implements ITeam {
 
 		if (type == Boss && y > FlxG.height / 2 - frameHeight / 2 && velocity.y != 0) {
 			velocity.set();
+			lockY = y;
 			beam();
+		}
+
+		if (type == Boss && lockY != null) {
+			y = FlxMath.lerp(y, lockY, 0.5);
 		}
 
 		if (beams != null) {
@@ -243,6 +251,8 @@ class Enemy extends FlxSprite implements ITeam {
 
 		if (type != Boss) {
 			alpha = Math.max(health / maxHealth, 0.2);
+		} else {
+			y -= 3;
 		}
 	}
 }
