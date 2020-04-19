@@ -14,6 +14,7 @@ class Enemy extends FlxSprite implements ITeam {
 	var waitUntilNextVolley:Int = 0;
 	var shot:Int = 0;
 	var maxHealth:Int;
+	var killAnimation = false;
 
 	public function new(bullets) {
 		super();
@@ -31,6 +32,10 @@ class Enemy extends FlxSprite implements ITeam {
 		scale.set(2, 2);
 		waitUntilNextVolley = FlxG.random.int(0, 5);
 		shot = 0;
+		angle = 0;
+		angularVelocity = 0;
+		angularAcceleration = 0;
+		killAnimation = false;
 
 		switch type {
 			case Basic(xDir):
@@ -72,10 +77,16 @@ class Enemy extends FlxSprite implements ITeam {
 	}
 
 	override function kill() {
-		super.kill();
+		if (killAnimation) {
+			return;
+		}
+		killAnimation = true;
 		fireTimer.cancel();
 		FlxG.sound.play("assets/sounds/explode_enemy.wav");
 		FlxG.camera.shake(0.005, 0.2);
+		angularAcceleration = 700;
+		velocity.set();
+		FlxTween.tween(scale, {x: 0, y: 0}, 1, {onComplete: _ -> exists = false});
 	}
 
 	override function hurt(damage:Float) {
