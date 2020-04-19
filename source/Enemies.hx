@@ -28,17 +28,22 @@ class Enemies extends FlxTypedGroup<Enemy> {
 	}
 
 	public function startSpawning() {
-		setWaveType(#if debug WaveToDebug #else Enemies #end);
+		setWaveType(#if debug Enemies #else Enemies #end);
 	}
 
 	function spawnWave() {
 		switch waveType {
 			case Enemies:
-				var xOffset = if (dir == -1) 300 else -100;
-				for (i in 0...5) {
-					spawn(10 + i * 100 + xOffset, -100 - i * 10, Basic(dir));
+				if (FlxG.random.bool(75)) {
+					var xOffset = if (dir == -1) 300 else -100;
+					for (i in 0...5) {
+						spawn(10 + i * 100 + xOffset, -100 - i * 10, Basic(dir));
+					}
+					dir *= -1;
+				} else {
+					spawn(100, -100, Basic2);
+					spawn(FlxG.width - 200, -100, Basic2);
 				}
-				dir *= -1;
 
 			case BulletWall:
 				var margin = 30;

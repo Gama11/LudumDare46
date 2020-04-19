@@ -3,7 +3,7 @@ class Bullets extends FlxTypedGroup<Bullet> {
 		super();
 	}
 
-	public function spawn(x, y, team, color, angle, type, speed) {
+	public function spawn(x, y, team, color, angle:Float, type, speed) {
 		return recycle(Bullet, Bullet.new).init(x, y, team, color, angle, type, speed);
 	}
 }

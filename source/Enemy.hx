@@ -2,11 +2,11 @@ import flixel.ui.FlxBar;
 
 enum EnemyType {
 	Basic(xDir:Int);
+	Basic2;
 	Boss;
 }
 
 class Enemy extends FlxSprite implements ITeam {
-	static final FireRate = 0.2;
 	static final BossSize = 300;
 
 	public var team(default, null):Team = Enemy;
@@ -43,6 +43,7 @@ class Enemy extends FlxSprite implements ITeam {
 		color = FlxColor.WHITE;
 		scale.set(1, 1);
 		antialiasing = false;
+		alpha = 1;
 
 		switch type {
 			case Basic(xDir):
@@ -50,10 +51,20 @@ class Enemy extends FlxSprite implements ITeam {
 				velocity.x = 50 * xDir;
 				score = 1;
 				loadGraphic("assets/images/invader1.png");
-				health = maxHealth = 12;
+				health = maxHealth = 5;
 				scale.set(2, 2);
-				fireTimer.start(FireRate, _ -> shoot(), 0);
+				fireTimer.start(0.2, _ -> tripleShot(), 0);
 				waitUntilNextVolley = FlxG.random.int(0, 5);
+
+			case Basic2:
+				velocity.y = 150;
+				score = 3;
+				loadGraphic("assets/images/invader2.png");
+				scale.set(2, 2);
+				health = maxHealth = 8;
+				scale.set(2, 2);
+				color = FlxColor.BLUE;
+				fireTimer.start(0.03, _ -> circularShot(), 0);
 
 			case Boss:
 				velocity.y = 150;
@@ -63,7 +74,7 @@ class Enemy extends FlxSprite implements ITeam {
 				FlxSpriteUtil.drawCircle(this);
 				color = FlxColor.MAGENTA;
 				healthBar = new FlxBar(0, 0, LEFT_TO_RIGHT, 200, 20, this, "health", 0, maxHealth);
-				healthBar.createFilledBar(FlxColor.BLACK, FlxColor.MAGENTA, true, FlxColor.BLACK);
+				healthBar.createFilledBar(FlxColor.BLACK, color, true, FlxColor.BLACK);
 				healthBar.screenCenter(X);
 				width *= 0.7;
 				height *= 0.7;
@@ -106,7 +117,7 @@ class Enemy extends FlxSprite implements ITeam {
 		}
 	}
 
-	function shoot() {
+	function tripleShot() {
 		if (waitUntilNextVolley > 0) {
 			waitUntilNextVolley--;
 			return;
@@ -129,6 +140,14 @@ class Enemy extends FlxSprite implements ITeam {
 		}
 	}
 
+	var lastShotAngle = 0.0;
+
+	function circularShot() {
+		var shotAngle = FlxAngle.wrapAngle(lastShotAngle + 5);
+		bullets.spawn(x + 20, y + 20, Enemy, color, shotAngle, Normal, 150);
+		lastShotAngle = shotAngle;
+	}
+
 	function beam() {
 		FlxG.sound.play("assets/sounds/charge_beam.wav", () -> {
 			for (beam in beams) {
@@ -142,7 +161,7 @@ class Enemy extends FlxSprite implements ITeam {
 		function makeBeam() {
 			var beam = new FlxSprite();
 			var margin = 400;
-			beam.makeGraphic(beamWidth, FlxG.width + margin, FlxColor.MAGENTA);
+			beam.makeGraphic(beamWidth, FlxG.width + margin, color);
 			beam.alpha = 0.2;
 			beam.screenCenter();
 			beam.angle += 45;

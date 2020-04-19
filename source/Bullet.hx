@@ -24,7 +24,7 @@ class Bullet extends FlxSprite implements ITeam {
 		makeGraphic(8, Width);
 	}
 
-	public function init(x, y, team, color, angle, type, speed) {
+	public function init(x, y, team, color, angle:Float, type, speed) {
 		reset(x, y);
 
 		angle -= 90;
