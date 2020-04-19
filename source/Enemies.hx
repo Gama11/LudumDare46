@@ -1,5 +1,5 @@
 class Enemies extends FlxTypedGroup<Enemy> {
-	static final WaveToDebug = Enemies;
+	static final WaveToDebug = Boss;
 	static final TimeBetweenWaves = 2;
 
 	public var boss(default, null):Enemy;
@@ -92,7 +92,7 @@ class Enemies extends FlxTypedGroup<Enemy> {
 				holeWavesLeft--;
 
 			case Boss:
-				if (boss != null) {
+				if (boss != null && PlayState.Difficulty < 1.5) {
 					return;
 				}
 				boss = spawn(0, 0, Boss);

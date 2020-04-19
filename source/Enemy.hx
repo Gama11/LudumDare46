@@ -77,7 +77,7 @@ class Enemy extends FlxSprite implements ITeam {
 				health = maxHealth = 3;
 				scale.set(2, 2);
 				color = FlxColor.ORANGE;
-				fireTimer.start(0.3, _ -> straightShot(), 0);
+				fireTimer.start(0.4, _ -> straightShot(), 0);
 
 			case Boss:
 				velocity.y = 150;
@@ -206,19 +206,23 @@ class Enemy extends FlxSprite implements ITeam {
 			beam.angle += 45;
 			beam.solid = false;
 			beam.antialiasing = true;
-			FlxTween.tween(beam, {angularVelocity: 40}, 3, {ease: FlxEase.expoIn});
+			FlxTween.tween(beam, {
+				angularVelocity: if (PlayState.Difficulty > 1.5) 25 else 40
+			}, 3, {
+				ease: FlxEase.expoIn
+			});
 			beams.add(beam);
 			return beam;
 		}
 		makeBeam();
 		makeBeam().angle += 90;
 
-		if (PlayState.Difficulty > 1.5) {
-			makeBeam().angle += 45;
-		}
-		if (PlayState.Difficulty > 2.0) {
-			makeBeam().angle += 45 + 90;
-		}
+		/* if (PlayState.Difficulty > 1.5) {
+				makeBeam().angle += 45;
+			}
+			if (PlayState.Difficulty > 2.0) {
+				makeBeam().angle += 45 + 90;
+		}*/
 
 		fireTimer.start(5, function(_) {
 			for (beam in beams) {
