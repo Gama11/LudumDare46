@@ -4,4 +4,3 @@ cap ship speed
 boss warning
 warp sound direction?
 warp in?
-fix instruction text click too early

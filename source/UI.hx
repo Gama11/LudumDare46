@@ -15,6 +15,7 @@ class UI extends FlxSpriteGroup {
 
 	var effectSprite:FlxEffectSprite;
 	var instructions:FlxText;
+	var instructionsThere:Bool = false;
 	var rechargeBar:FlxBar;
 	var thumps:Array<{function cancel():Void;}> = [];
 	var endIntroCallback:() -> Void;
@@ -90,7 +91,11 @@ class UI extends FlxSpriteGroup {
 		endIntroCallback = callback;
 		FlxTween.tween(effectSprite, {alpha: 0}, 1, {
 			onComplete: function(_) {
-				FlxTween.tween(instructions, {x: 100}, 0.1);
+				FlxTween.tween(instructions, {x: 100}, 0.1, {
+					onComplete: _ -> {
+						instructionsThere = true;
+					}
+				});
 			}
 		});
 	}
@@ -194,7 +199,7 @@ class UI extends FlxSpriteGroup {
 
 		rechargeBar.color = if (rechargeBar.percent == 100) FlxColor.RED else FlxColor.WHITE;
 
-		if (endIntroCallback != null && FlxG.mouse.justPressed) {
+		if (endIntroCallback != null && FlxG.mouse.justPressed && instructionsThere) {
 			FlxTween.tween(instructions, {x: 1000}, 0.1);
 			endIntroCallback();
 			endIntroCallback = null;
