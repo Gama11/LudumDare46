@@ -5,7 +5,7 @@ import openfl.filters.ShaderFilter;
 class PlayState extends FlxState {
 	public static var FirstWaveBeaten = false;
 	public static final IntroDuration = 3;
-	public static var Difficulty(default, null) = 1.0;
+	public static var Difficulty(default, null):Float;
 
 	var player:Player;
 	var bullets:Bullets;
@@ -29,6 +29,7 @@ class PlayState extends FlxState {
 		FlxG.sound.music.fadeIn(3);
 		FlxG.sound.defaultSoundGroup.volume = 0.3;
 		FlxG.timeScale = 1;
+		Difficulty = 1;
 
 		bgColor = 0x222222;
 
