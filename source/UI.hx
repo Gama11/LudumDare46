@@ -143,35 +143,41 @@ class UI extends FlxSpriteGroup {
 		}
 
 		var delay = 0.6;
-		tweens.tween(scoreText, {x: 0, y: FlxG.height / 2 - 200}, 0.3, {
+		tweens.tween(scoreText, {x: 0, y: FlxG.height / 2 - 250}, 0.3, {
 			onComplete: _ -> {
 				new FlxTimer(timers).start(1, function(_) {
 					scoreText.text = "Final " + scoreText.text;
 					FlxG.sound.play("assets/sounds/final.wav");
 					new FlxTimer(timers).start(delay, function(_) {
 						new FlxTimer(timers).start(delay, function(_) {
-							var deaths = FlxG.save.data.deaths;
-							if (deaths == null) {
-								return;
-							}
-							scoreText.text += "\nDeaths: " + deaths;
-							FlxG.sound.play("assets/sounds/final.wav");
 							new FlxTimer(timers).start(delay, function(_) {
-								retryText = new FlxText(0, 650, 0, "[Click to Retry]", 38);
-								retryText.screenCenter(X);
-								retryText.alpha = 0;
-								add(retryText);
-								tweens.tween(retryText, {alpha: 1}, 1.5, {
-									type: PINGPONG
-								});
-
+								var deaths:Null<Int> = FlxG.save.data.deaths;
+								if (deaths == null) {
+									deaths = 0;
+								}
+								scoreText.text += "\nDeaths: " + deaths;
 								FlxG.sound.play("assets/sounds/final.wav");
-								gameEndHere = true;
+
+								new FlxTimer(timers).start(delay, function(_) {
+									retryText = new FlxText(0, 650, 0, "[Click to Retry]", 38);
+									retryText.screenCenter(X);
+									retryText.alpha = 0;
+									add(retryText);
+									tweens.tween(retryText, {alpha: 1}, 1.5, {
+										type: PINGPONG
+									});
+
+									FlxG.sound.play("assets/sounds/final.wav");
+									gameEndHere = true;
+								});
 							});
+
+							scoreText.text += "\nLevel: " + getLevelString();
+							FlxG.sound.play("assets/sounds/final.wav");
 						});
-						var highscore = FlxG.save.data.highscore;
+						var highscore:Null<Int> = FlxG.save.data.highscore;
 						if (highscore == null) {
-							return;
+							highscore = 0;
 						}
 						scoreText.text += "\nHighscore: " + highscore;
 						FlxG.sound.play("assets/sounds/final.wav");
@@ -190,8 +196,16 @@ class UI extends FlxSpriteGroup {
 		scoreText.scale.set(scale, scale);
 	}
 
+	function getLevelString() {
+		var l = FlxMath.roundDecimal(PlayState.Difficulty, 1) + "";
+		if (!l.contains(".")) {
+			return l + ".0";
+		}
+		return l;
+	}
+
 	public function updateDifficulty(factor:Float) {
-		difficultyText.text = 'Level: ${FlxMath.roundDecimal(factor, 1)}';
+		difficultyText.text = 'Level: ${getLevelString()}';
 		var scale = 3;
 		difficultyText.scale.set(scale, scale);
 	}

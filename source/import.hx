@@ -11,3 +11,5 @@ import flixel.text.*;
 import flixel.tweens.*;
 import flixel.tweens.FlxTween;
 import flixel.util.*;
+
+using StringTools;
