@@ -140,6 +140,7 @@ class Enemy extends FlxSprite implements ITeam {
 			beam.makeGraphic(width, height, FlxColor.MAGENTA);
 			beam.alpha = 0.2;
 			beam.screenCenter();
+			beam.angle += 45;
 			FlxTween.tween(beam, {angularVelocity: 40}, 3, {ease: FlxEase.expoIn});
 			beams.add(beam);
 		}
