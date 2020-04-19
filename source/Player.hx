@@ -92,7 +92,7 @@ class Player extends FlxSprite implements ITeam {
 			}
 		}
 
-		if (!FlxG.keys.pressed.SPACE && !rolling) {
+		if (!FlxG.keys.pressed.SPACE && !FlxG.mouse.pressed && !rolling) {
 			var factor = LerpFactor;
 			x = FlxMath.lerp(x, FlxG.mouse.x - frameWidth / 2, factor);
 			y = FlxMath.lerp(y, FlxG.mouse.y - frameHeight / 2, factor);
