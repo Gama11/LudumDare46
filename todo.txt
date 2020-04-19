@@ -1,6 +1,5 @@
 boss
 2 more basic enemy types
 cap ship speed
-title screen
 "wave types seen"?
 "bullet storm" at y direction

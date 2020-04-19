@@ -102,6 +102,9 @@ class PlayState extends FlxState {
 		if (FlxG.keys.justPressed.T) {
 			FlxG.camera.filtersEnabled = !FlxG.camera.filtersEnabled;
 		}
+		if (FlxG.keys.justPressed.ESCAPE) {
+			FlxG.switchState(new MenuState());
+		}
 		#end
 
 		if (gameStarted) {
