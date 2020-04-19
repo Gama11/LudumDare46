@@ -11,6 +11,7 @@ class UI extends FlxSpriteGroup {
 	var heart:FlxSprite;
 	var healthCounter:FlxText;
 	var scoreText:FlxText;
+	var difficultyText:FlxText;
 
 	var effectSprite:FlxEffectSprite;
 	var instructions:FlxText;
@@ -69,6 +70,11 @@ class UI extends FlxSpriteGroup {
 		scoreText.alignment = CENTER;
 		add(scoreText);
 
+		difficultyText = new FlxText(323, 40, 0, "Level: 1.0", 16);
+		difficultyText.fieldWidth = FlxG.width;
+		difficultyText.alignment = CENTER;
+		add(difficultyText);
+
 		var offsetY = 0;
 		var width = 10;
 		rechargeBar = new FlxBar(FlxG.width - width, offsetY, BOTTOM_TO_TOP, width, FlxG.height - offsetY, player, "charge", 0, 1);
@@ -120,6 +126,7 @@ class UI extends FlxSpriteGroup {
 		heart.visible = false;
 		rechargeBar.visible = false;
 		slowdownIcon.visible = false;
+		difficultyText.visible = false;
 
 		for (thump in thumps) {
 			thump.cancel();
@@ -165,14 +172,25 @@ class UI extends FlxSpriteGroup {
 		scoreText.scale.set(scale, scale);
 	}
 
+	public function updateDifficulty(factor:Float) {
+		difficultyText.text = 'Level: ${FlxMath.roundDecimal(factor, 1)}';
+		var scale = 3;
+		difficultyText.scale.set(scale, scale);
+	}
+
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		var scale = scoreText.scale.x;
-		if (scale > 1) {
-			scale -= 0.1;
-			scoreText.scale.set(scale, scale);
+		function scaleDown(what:FlxText) {
+			var scale = what.scale.x;
+			if (scale > 1) {
+				scale -= 0.1;
+				what.scale.set(scale, scale);
+			}
 		}
+
+		scaleDown(scoreText);
+		scaleDown(difficultyText);
 
 		rechargeBar.color = if (rechargeBar.percent == 100) FlxColor.RED else FlxColor.WHITE;
 

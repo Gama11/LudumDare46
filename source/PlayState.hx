@@ -5,6 +5,7 @@ import openfl.filters.ShaderFilter;
 class PlayState extends FlxState {
 	public static var FirstWaveBeaten = false;
 	public static final IntroDuration = 3;
+	public static var Difficulty(default, null) = 1.0;
 
 	var player:Player;
 	var bullets:Bullets;
@@ -34,7 +35,7 @@ class PlayState extends FlxState {
 
 		bullets = new Bullets();
 		pickups = new Pickups();
-		enemies = new Enemies(bullets);
+		enemies = new Enemies(bullets, increaseLevel);
 
 		player = new Player(bullets);
 		player.screenCenter();
@@ -74,6 +75,11 @@ class PlayState extends FlxState {
 		}
 
 		// FlxG.camera.setFilters([new ShaderFilter(new CameraShader())]);
+	}
+
+	function increaseLevel() {
+		Difficulty += 0.1;
+		ui.updateDifficulty(Difficulty);
 	}
 
 	override public function update(elapsed:Float) {
@@ -156,6 +162,9 @@ class PlayState extends FlxState {
 		}
 		if (FlxG.keys.justPressed.S) {
 			FlxG.timeScale = if (FlxG.timeScale == 1) 0.1 else 1;
+		}
+		if (FlxG.keys.justPressed.U) {
+			increaseLevel();
 		}
 		#end
 

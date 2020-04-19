@@ -18,7 +18,7 @@ class Enemy extends FlxSprite implements ITeam {
 	var type:EnemyType;
 	var waitUntilNextVolley:Int = 0;
 	var shot:Int = 0;
-	var maxHealth:Int;
+	var maxHealth:Float;
 	var killAnimation = false;
 	var healthBar:FlxBar;
 
@@ -52,7 +52,7 @@ class Enemy extends FlxSprite implements ITeam {
 				velocity.x = 50 * xDir;
 				score = 1;
 				loadGraphic("assets/images/invader1.png");
-				health = maxHealth = 5;
+				health = maxHealth = 4;
 				scale.set(2, 2);
 				fireTimer.start(0.2, _ -> tripleShot(), 0);
 				waitUntilNextVolley = FlxG.random.int(0, 5);
@@ -62,7 +62,7 @@ class Enemy extends FlxSprite implements ITeam {
 				score = 3;
 				loadGraphic("assets/images/invader2.png");
 				scale.set(2, 2);
-				health = maxHealth = 8;
+				health = maxHealth = 6;
 				scale.set(2, 2);
 				color = FlxColor.BLUE;
 				fireTimer.start(0.03, _ -> circularShot(), 0);
@@ -70,7 +70,7 @@ class Enemy extends FlxSprite implements ITeam {
 			case Boss:
 				velocity.y = 150;
 				score = 25;
-				health = maxHealth = 150;
+				health = maxHealth = 120;
 				makeGraphic(BossSize, BossSize, FlxColor.TRANSPARENT);
 				FlxSpriteUtil.drawCircle(this);
 				color = FlxColor.MAGENTA;
@@ -83,6 +83,9 @@ class Enemy extends FlxSprite implements ITeam {
 				screenCenter(X);
 				antialiasing = true;
 		}
+
+		health *= PlayState.Difficulty;
+		maxHealth *= PlayState.Difficulty;
 	}
 
 	override function update(elapsed:Float) {
@@ -180,6 +183,13 @@ class Enemy extends FlxSprite implements ITeam {
 		}
 		makeBeam();
 		makeBeam().angle += 90;
+
+		if (PlayState.Difficulty > 1.5) {
+			makeBeam().angle += 45;
+		}
+		if (PlayState.Difficulty > 2.0) {
+			makeBeam().angle += 45 + 90;
+		}
 
 		fireTimer.start(5, function(_) {
 			for (beam in beams) {

@@ -2,6 +2,6 @@
 cap ship speed
 "bullet storm" at y direction
 boss warning
-some difficulty scaling
 warp sound direction?
 warp in?
+fix instruction text click too early
