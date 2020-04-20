@@ -207,7 +207,7 @@ class Enemy extends FlxSprite implements ITeam {
 			beam.solid = false;
 			beam.antialiasing = true;
 			FlxTween.tween(beam, {
-				angularVelocity: if (PlayState.Difficulty > 1.5) 25 else 40
+				angularVelocity: if (PlayState.Difficulty >= 1.5) 25 else 40
 			}, 3, {
 				ease: FlxEase.expoIn
 			});
